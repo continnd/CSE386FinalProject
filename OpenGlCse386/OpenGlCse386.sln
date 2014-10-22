@@ -3,41 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenGlCse386", "OpenGlCse386\OpenGlCse386.vcxproj", "{7CFB5C97-484D-4D87-8C7B-440F79394E04}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lab2", "Lab2\Lab2.vcxproj", "{04CC2299-D7F5-477F-A6EE-F05ED6F760AF}"
-	ProjectSection(ProjectDependencies) = postProject
-		{7CFB5C97-484D-4D87-8C7B-440F79394E04} = {7CFB5C97-484D-4D87-8C7B-440F79394E04}
-	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "continndLab3", "continndLab3\continndLab3.vcxproj", "{3B0C6CAB-2E07-4797-8F74-FCE3E5CE352F}"
-	ProjectSection(ProjectDependencies) = postProject
-		{7CFB5C97-484D-4D87-8C7B-440F79394E04} = {7CFB5C97-484D-4D87-8C7B-440F79394E04}
-	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "continndLab4", "continndLab4\continndLab4.vcxproj", "{0E4AF180-5FD1-49E6-9AD2-4CFDC2F6E4B3}"
-	ProjectSection(ProjectDependencies) = postProject
-		{7CFB5C97-484D-4D87-8C7B-440F79394E04} = {7CFB5C97-484D-4D87-8C7B-440F79394E04}
-	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "continndLab5", "continndLab5\continndLab5.vcxproj", "{5B7D728D-EEB2-4FFB-8969-FB900D656E00}"
-	ProjectSection(ProjectDependencies) = postProject
-		{7CFB5C97-484D-4D87-8C7B-440F79394E04} = {7CFB5C97-484D-4D87-8C7B-440F79394E04}
-	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "continndLab6", "continndLab6\continndLab6.vcxproj", "{5C5DC0E7-E83B-4402-B4ED-85F7FA63C13C}"
-	ProjectSection(ProjectDependencies) = postProject
-		{7CFB5C97-484D-4D87-8C7B-440F79394E04} = {7CFB5C97-484D-4D87-8C7B-440F79394E04}
-	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "continndLab7", "continndLab7\continndLab7.vcxproj", "{1F43072C-97EF-4FA2-93F7-B8A9AE19B69B}"
-	ProjectSection(ProjectDependencies) = postProject
-		{7CFB5C97-484D-4D87-8C7B-440F79394E04} = {7CFB5C97-484D-4D87-8C7B-440F79394E04}
-	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "continndLab8", "continndLab8\continndLab8.vcxproj", "{89C0453A-B1B6-45BA-9790-72C35A10BEE6}"
-	ProjectSection(ProjectDependencies) = postProject
-		{7CFB5C97-484D-4D87-8C7B-440F79394E04} = {7CFB5C97-484D-4D87-8C7B-440F79394E04}
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -48,34 +13,6 @@ Global
 		{7CFB5C97-484D-4D87-8C7B-440F79394E04}.Debug|Win32.Build.0 = Debug|Win32
 		{7CFB5C97-484D-4D87-8C7B-440F79394E04}.Release|Win32.ActiveCfg = Release|Win32
 		{7CFB5C97-484D-4D87-8C7B-440F79394E04}.Release|Win32.Build.0 = Release|Win32
-		{04CC2299-D7F5-477F-A6EE-F05ED6F760AF}.Debug|Win32.ActiveCfg = Debug|Win32
-		{04CC2299-D7F5-477F-A6EE-F05ED6F760AF}.Debug|Win32.Build.0 = Debug|Win32
-		{04CC2299-D7F5-477F-A6EE-F05ED6F760AF}.Release|Win32.ActiveCfg = Release|Win32
-		{04CC2299-D7F5-477F-A6EE-F05ED6F760AF}.Release|Win32.Build.0 = Release|Win32
-		{3B0C6CAB-2E07-4797-8F74-FCE3E5CE352F}.Debug|Win32.ActiveCfg = Debug|Win32
-		{3B0C6CAB-2E07-4797-8F74-FCE3E5CE352F}.Debug|Win32.Build.0 = Debug|Win32
-		{3B0C6CAB-2E07-4797-8F74-FCE3E5CE352F}.Release|Win32.ActiveCfg = Release|Win32
-		{3B0C6CAB-2E07-4797-8F74-FCE3E5CE352F}.Release|Win32.Build.0 = Release|Win32
-		{0E4AF180-5FD1-49E6-9AD2-4CFDC2F6E4B3}.Debug|Win32.ActiveCfg = Debug|Win32
-		{0E4AF180-5FD1-49E6-9AD2-4CFDC2F6E4B3}.Debug|Win32.Build.0 = Debug|Win32
-		{0E4AF180-5FD1-49E6-9AD2-4CFDC2F6E4B3}.Release|Win32.ActiveCfg = Release|Win32
-		{0E4AF180-5FD1-49E6-9AD2-4CFDC2F6E4B3}.Release|Win32.Build.0 = Release|Win32
-		{5B7D728D-EEB2-4FFB-8969-FB900D656E00}.Debug|Win32.ActiveCfg = Debug|Win32
-		{5B7D728D-EEB2-4FFB-8969-FB900D656E00}.Debug|Win32.Build.0 = Debug|Win32
-		{5B7D728D-EEB2-4FFB-8969-FB900D656E00}.Release|Win32.ActiveCfg = Release|Win32
-		{5B7D728D-EEB2-4FFB-8969-FB900D656E00}.Release|Win32.Build.0 = Release|Win32
-		{5C5DC0E7-E83B-4402-B4ED-85F7FA63C13C}.Debug|Win32.ActiveCfg = Debug|Win32
-		{5C5DC0E7-E83B-4402-B4ED-85F7FA63C13C}.Debug|Win32.Build.0 = Debug|Win32
-		{5C5DC0E7-E83B-4402-B4ED-85F7FA63C13C}.Release|Win32.ActiveCfg = Release|Win32
-		{5C5DC0E7-E83B-4402-B4ED-85F7FA63C13C}.Release|Win32.Build.0 = Release|Win32
-		{1F43072C-97EF-4FA2-93F7-B8A9AE19B69B}.Debug|Win32.ActiveCfg = Debug|Win32
-		{1F43072C-97EF-4FA2-93F7-B8A9AE19B69B}.Debug|Win32.Build.0 = Debug|Win32
-		{1F43072C-97EF-4FA2-93F7-B8A9AE19B69B}.Release|Win32.ActiveCfg = Release|Win32
-		{1F43072C-97EF-4FA2-93F7-B8A9AE19B69B}.Release|Win32.Build.0 = Release|Win32
-		{89C0453A-B1B6-45BA-9790-72C35A10BEE6}.Debug|Win32.ActiveCfg = Debug|Win32
-		{89C0453A-B1B6-45BA-9790-72C35A10BEE6}.Debug|Win32.Build.0 = Debug|Win32
-		{89C0453A-B1B6-45BA-9790-72C35A10BEE6}.Release|Win32.ActiveCfg = Release|Win32
-		{89C0453A-B1B6-45BA-9790-72C35A10BEE6}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
