@@ -177,7 +177,7 @@ void SharedProjectionAndViewing::setViewMatrix( glm::mat4 viewMatrix)
 		// Bind the buffer.
 		glBindBuffer(GL_UNIFORM_BUFFER, worldEyeBuffer);
 
-		glm::vec3 viewPoint = (glm::inverse(viewMatrix)[3]).xyz;
+		glm::vec3 viewPoint = vec3(glm::inverse(viewMatrix)[3]);
 
 		glBufferSubData(GL_UNIFORM_BUFFER, eyePositionLocation, sizeof(glm::vec3), glm::value_ptr(viewPoint));
 	}

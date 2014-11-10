@@ -14,4 +14,4 @@ protected:
 	glm::vec3 axis; 
 	// rate and direction of rotation
 	GLfloat rate; 
-};
+};

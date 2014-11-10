@@ -18,9 +18,15 @@ GLint getUniformLocation(GLuint const m_shaderProg, char* pUniformName);
 
 struct Material
 {
-	Material( GLint ambientMatLoc = 0xFFFFFFFF,  GLint diffuseMatLoc = 0xFFFFFFFF, 
-			  GLint specularMatLoc = 0xFFFFFFFF, GLint specularExpMatLoc= 0xFFFFFFFF, 
-			  GLint emissiveMatLoc = 0xFFFFFFFF, GLint textureMappedLoc =  0xFFFFFFFF )
+	Material()
+	{
+		setDefaultProperties();
+	}
+
+
+	Material( GLint ambientMatLoc,  GLint diffuseMatLoc, 
+			  GLint specularMatLoc, GLint specularExpMatLoc, 
+			  GLint emissiveMatLoc, GLint textureMappedLoc =  0xFFFFFFFF )
 	{
 		this->ambientMatLoc = ambientMatLoc;  
 		this->diffuseMatLoc =  diffuseMatLoc;
@@ -29,13 +35,30 @@ struct Material
 		this->emissiveMatLoc = emissiveMatLoc;
 		this->textureMappedLoc = textureMappedLoc;
 
+		setDefaultProperties();	
+	}
+
+	void setDefaultProperties()
+	{
 		ambientMat = vec4( 0.75f, 0.75f, 0.75f, 1.0f );
 		diffuseMat = vec4( 0.75f, 0.75f, 0.75f, 1.0f );
 		specularMat = vec4( 1.0f, 1.0f, 1.0f, 1.0f );
 		specularExpMat = 64.0f;
 		emissiveMat = vec4( 0.0f, 0.0f, 0.0f, 1.0f );
 		textureMapped = false;
-		
+	}
+
+	void setUpMaterial( GLint ambientMatLoc = 0xFFFFFFFF,  GLint diffuseMatLoc = 0xFFFFFFFF, 
+						GLint specularMatLoc = 0xFFFFFFFF, GLint specularExpMatLoc= 0xFFFFFFFF, 
+						GLint emissiveMatLoc = 0xFFFFFFFF, GLint textureMappedLoc =  0xFFFFFFFF )
+	{
+		this->ambientMatLoc = ambientMatLoc;  
+		this->diffuseMatLoc =  diffuseMatLoc;
+		this->specularMatLoc = specularMatLoc;
+		this->specularExpMatLoc = specularExpMatLoc;
+		this->emissiveMatLoc = emissiveMatLoc;
+		this->textureMappedLoc = textureMappedLoc;
+	
 	}
 
 	void setShaderMaterialProperties()

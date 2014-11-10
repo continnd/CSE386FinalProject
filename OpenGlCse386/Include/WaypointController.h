@@ -4,8 +4,7 @@ public:
 	// Constructor sets the position of the object,
 	// the axis about which it will rotate, and the rate and direction
 	// of rotation.
-	WaypointController(glm::vec3 pos, 
-		vector<glm::vec3> wp, GLfloat v = 1.0f, int r=1);
+	WaypointController(glm::vec3 pos, vector<glm::vec3> wp, GLfloat v = 1.0f);
 	virtual void update(float elapsedTimeSeconds);
 	void findVelocityVector(glm::vec3 next, glm::vec3 cur);
 protected:
@@ -16,5 +15,4 @@ protected:
 	glm::vec3 vVector; 
 	glm::vec3 destVector;
 	int i;
-	int repeat;
 };

@@ -17,7 +17,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
@@ -38,7 +38,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LinkIncremental>true</LinkIncremental>
+    <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -51,6 +51,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -71,6 +72,8 @@ copy "$(TargetPath)" "$(SolutionDir)"\"Lib\$(TargetFileName)"</Command>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -86,32 +89,49 @@ copy "$(TargetPath)" "$(SolutionDir)"\"Lib\$(TargetFileName)"</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BuildShaderProgram.h" />
+    <ClInclude Include="Cone.h" />
     <ClInclude Include="Controller.h" />
+    <ClInclude Include="Cube.h" />
     <ClInclude Include="Floor.h" />
+    <ClInclude Include="Floor2.h" />
+    <ClInclude Include="font.h" />
     <ClInclude Include="glutBase.h" />
+    <ClInclude Include="GlutObject.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="OpenGLApplicationBase.h" />
     <ClInclude Include="OrbitController.h" />
     <ClInclude Include="Pyramid.h" />
     <ClInclude Include="SharedProjectionAndViewing.h" />
+    <ClInclude Include="Sphere.h" />
     <ClInclude Include="SpinnerController.h" />
+    <ClInclude Include="textureCoordinates.h" />
+    <ClInclude Include="Torus.h" />
+    <ClInclude Include="Cylinder.h" />
     <ClInclude Include="vertexStructs.h" />
     <ClInclude Include="VisualObject.h" />
     <ClInclude Include="WaypointController.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BuildShaderProgram.cpp" />
+    <ClCompile Include="Cone.cpp" />
     <ClCompile Include="Controller.cpp" />
+    <ClCompile Include="Cube.cpp" />
+    <ClCompile Include="Cylinder.cpp" />
     <ClCompile Include="Floor.cpp" />
+    <ClCompile Include="Floor2.cpp" />
     <ClCompile Include="glutBase.cpp" />
+    <ClCompile Include="GlutObject.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="OpenGLApplicationBase.cpp" />
     <ClCompile Include="OrbitController.cpp" />
-    <ClCompile Include="SharedProjectionAndViewing.cpp" />
     <ClCompile Include="Pyramid.cpp" />
+    <ClCompile Include="SharedProjectionAndViewing.cpp" />
+    <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="SpinnerController.cpp" />
+    <ClCompile Include="textureCoordinates.cpp" />
+    <ClCompile Include="Torus.cpp" />
     <ClCompile Include="VisualObject.cpp" />
-    <ClCompile Include="WaypointControllercpp.cpp" />
+    <ClCompile Include="WaypointController.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

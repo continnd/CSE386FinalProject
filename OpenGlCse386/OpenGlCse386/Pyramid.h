@@ -1,7 +1,7 @@
 #ifndef ___PYRAMID_H___
 #define ___PYRAMID_H___
 
-#include "visualobject.h"
+#include "VisualObject.h"
 #include "BuildShaderProgram.h"
  
 class Pyramid : public VisualObject
@@ -29,6 +29,8 @@ class Pyramid : public VisualObject
 		 * the initialize method.
 		 */
 		virtual void draw();
+
+		void setShaderValues();
 
 	protected:
 		

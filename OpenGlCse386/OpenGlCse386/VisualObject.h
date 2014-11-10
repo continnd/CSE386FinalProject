@@ -3,6 +3,8 @@
 
 #include <math.h>
 #include <iostream>
+#include "VisualObject.h"
+#include "Material.h"
 
 using namespace std;
 
@@ -101,6 +103,8 @@ public:
 	// its object coordinate frame. Not considered part of the modeling
 	// transformation.
 	glm::mat4 fixedTransformation;
+
+	Material material;
 
 protected:
 
