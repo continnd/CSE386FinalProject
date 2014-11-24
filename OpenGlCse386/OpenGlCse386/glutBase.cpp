@@ -1,8 +1,8 @@
+
 #include <stdio.h>
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 #include "glutbase.h"
-
 
 // *************** EVENT HANDLERS ***************************************
 
@@ -110,7 +110,12 @@ static void ReshapeCB(int windowWidth, int windowHeight)
 */
 static void registerCallBacks()
 {
-
+	glutKeyboardFunc(KeyboardCB); // callback for ascii character input
+	glutDisplayFunc(RenderSceneCB); // callback for window redisplay
+	glutIdleFunc(IdleCB); // idle callback
+	glutVisibilityFunc(VisibilityCB); // callback for visibility changes
+	glutReshapeFunc(ReshapeCB); // callback for window size changes
+	glutMenuStatusFunc(menuStatusCB); // callback for menu exposures
 
 } // end registerCallBacks
 
@@ -214,13 +219,6 @@ void GLUTBaseRunApplication(OpenGLApplicationBase* pCallbacks)
 	registerCallBacks();
 	// Enter the GLUT main loop. Control will not return until the
 	// window is closed.
-
-	glutKeyboardFunc(KeyboardCB); // callback for ascii character input
-	glutDisplayFunc(RenderSceneCB); // callback for window redisplay
-	glutIdleFunc(IdleCB); // idle callback
-	glutVisibilityFunc(VisibilityCB); // callback for visibility changes
-	glutReshapeFunc(ReshapeCB); // callback for window size changes
-	glutMenuStatusFunc(menuStatusCB); // callback for menu exposures
 	glutMainLoop();
 	// Keeps the console window open after the main loop has been exited
 	// Allows console output to be viewed after the program ends

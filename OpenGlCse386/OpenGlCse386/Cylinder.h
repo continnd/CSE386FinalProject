@@ -2,7 +2,6 @@
 #define ___CYLINDER_H___
 
 #include "VisualObject.h"
-//#include "Lighting.h"
 #include "textureCoordinates.h"
  
 
@@ -32,9 +31,6 @@ class Cylinder : public VisualObject
 
 		// this variable will later be used to hold the number of indices
 		int bodyIndicesCount, bottomIndicesCount, topIndicesCount;
-
-		// For texture mapping
-		GLuint textureObject;
 };
 
 #endif /* ___CYLINDER_H___ */

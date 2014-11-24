@@ -1,8 +1,9 @@
 #ifndef ___PYRAMID_H___
 #define ___PYRAMID_H___
 
-#include "VisualObject.h"
+#include "visualobject.h"
 #include "BuildShaderProgram.h"
+#include "textureCoordinates.h"
  
 class Pyramid : public VisualObject
 {

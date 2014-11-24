@@ -224,7 +224,7 @@ glm::vec3 VisualObject::getWorldPosition()
 {
 	glm::mat4 totalTransformation = getParentModelMatrix() * modelMatrix;
 
-	return vec3(totalTransformation[3]);
+	return totalTransformation[3].xyz;
 
 } // end getWorldPosition
 

@@ -36,7 +36,6 @@ void Cone::setShaderValues()
 // Construct visual object display list.
 void Cone::initialize()
 {
-//	textureObject = setupTexture( "test.bmp" );
 	setShaderValues();
 	
 	initializeConeBottom();
@@ -244,9 +243,7 @@ void Cone::draw()
 
 	//material.setTextureMapped(true);
 	material.setShaderMaterialProperties();
-
-	glBindTexture(GL_TEXTURE_2D, textureObject);
-
+	
 	// Draw body
 	glBindVertexArray(vertexArrayObject);
     glDrawElements(GL_TRIANGLES, bodyIndicesCount, GL_UNSIGNED_INT, 0);

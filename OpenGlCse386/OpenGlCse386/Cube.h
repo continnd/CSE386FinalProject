@@ -2,7 +2,8 @@
 #define ___CUBE_H___
 
 #include "VisualObject.h"
-//#include "Lighting.h" 
+#include "BuildShaderProgram.h"
+#include "textureCoordinates.h"
 
 class Cube : public VisualObject
 {

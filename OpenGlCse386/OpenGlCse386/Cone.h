@@ -2,7 +2,6 @@
 #define ___CONE_H___
  
 #include "VisualObject.h"
-//#include "Lighting.h"
 #include "textureCoordinates.h"
 
 class Cone : public VisualObject
@@ -30,9 +29,6 @@ class Cone : public VisualObject
 
 		// this variable will later be used to hold the number of indices
 		int bodyIndicesCount, bottomIndicesCount;
-
-		// For texture mapping
-		GLuint textureObject;
 
 };
 

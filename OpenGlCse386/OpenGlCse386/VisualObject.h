@@ -3,8 +3,6 @@
 
 #include <math.h>
 #include <iostream>
-#include "VisualObject.h"
-#include "Material.h"
 
 using namespace std;
 
@@ -19,7 +17,7 @@ using namespace std;
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/swizzle.hpp>
 #include <glm/gtc/constants.hpp>
-
+#include "Material.h"
 
 //#include "bitmap_class.h"
 //#include "textureCoordinates.h"
@@ -32,6 +30,7 @@ class VisualObject
 {
 public: 
 
+	Material material;
 	// Give method of the Controller class and subclasses
 	// access to the private members of this object
 	friend class Controller;
@@ -103,8 +102,6 @@ public:
 	// its object coordinate frame. Not considered part of the modeling
 	// transformation.
 	glm::mat4 fixedTransformation;
-
-	Material material;
 
 protected:
 

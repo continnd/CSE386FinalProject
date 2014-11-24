@@ -2,16 +2,15 @@
 #define GLUT_BASE_H
 
 #include <iostream>
-#include <gl/glew.h>
+#include <GL/glew.h>
+#include <GL/freeglut.h>
 #include "OpenGLApplicationBase.h"
+
+#define WINDOW_WIDTH 1024 // Default window width
+#define WINDOW_HEIGHT 768 // Default window height
 
 using namespace std;
 
-#define WINDOW_WIDTH 1024
-#define WINDOW_HEIGHT 768
-
-
- 
 /**
 * GLUTBase provides a mechanism for getting support a class that implements 
 * the ICallbacks interface. A reference to the class it held in a pointer varibale
@@ -27,7 +26,6 @@ using namespace std;
 * @param argcp A pointer to the program’s unmodified argc variable from main.
 * @param argv The program’s unmodified argv variable from main.
 */
-
 void GLUTBaseInit(int argc, char** argv);
 
 /**
@@ -54,5 +52,5 @@ void GLUTBaseRunApplication(OpenGLApplicationBase* pCallbacks);
 // variable is declared in OpenGLApplicationBase.h
 extern OpenGLApplicationBase* s_pOpenGLAppBase;
 
-#endif /* GLUT_BASE_H */
 
+#endif /* GLUT_BASE_H */

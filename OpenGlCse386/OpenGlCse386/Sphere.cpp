@@ -44,8 +44,6 @@ void Sphere::setShaderValues()
 // Construct visual object display list.
 void Sphere::initialize()
 {
-	//textureObject = setupTexture( "wood1-Sphere1.bmp");
-	//textureObject = setupTexture( "earth.bmp" );
 	setShaderValues();
 
 	stackStep = 2.0f * M_PI / (stacks*2.0f);
@@ -291,8 +289,6 @@ void Sphere::draw()
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, value_ptr(modelAndFixed));
 
 	material.setShaderMaterialProperties();
-
-	glBindTexture(GL_TEXTURE_2D, textureObject);
 
 	// Draw top
 	glBindVertexArray(vertexArrayObjectForTop);

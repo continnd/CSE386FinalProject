@@ -43,8 +43,6 @@ void Cylinder::setShaderValues()
 // Construct visual object display list.
 void Cylinder::initialize()
 {
-	//textureObject = setupTexture( "test.bmp" );
-
 	setShaderValues();
 	
 	initializeCylinderBottom();
@@ -280,9 +278,7 @@ void Cylinder::draw()
 
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, value_ptr(modelAndFixed));
 
-	material.setTextureMapped(true);
 	material.setShaderMaterialProperties();
-	glBindTexture(GL_TEXTURE_2D, textureObject);
 
 	// Draw body
 	glBindVertexArray(vertexArrayObject);

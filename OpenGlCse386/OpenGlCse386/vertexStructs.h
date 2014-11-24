@@ -24,19 +24,6 @@ struct pcVertexData
 	}
 };
 
-struct pncVertexData
-{
-	glm::vec3 m_pos;
-	glm::vec3 m_normal;
-	glm::vec4 m_color;
-	pncVertexData() {}
-	pncVertexData(glm::vec3 pos, glm::vec3 norm, glm::vec4 col)
-	{
-		m_pos = pos;
-		m_normal = norm;
-		m_color = col;
-	}};
-
 struct pnVertexData
 {
 	glm::vec3 m_pos;
@@ -67,6 +54,18 @@ struct pntVertexData
 	}
 };
 
-
+struct pncVertexData
+{
+	glm::vec3 m_pos;
+	glm::vec3 m_normal;
+	glm::vec4 m_color;
+	pncVertexData() {}
+	pncVertexData(glm::vec3 pos, glm::vec3 norm, glm::vec4 col)
+	{
+		m_pos = pos;
+		m_normal = norm;
+		m_color = col;
+	}
+};
 
 #endif /* ___VERTEX_STRUCTS_H___ */

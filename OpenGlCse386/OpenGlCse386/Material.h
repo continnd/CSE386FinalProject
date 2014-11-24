@@ -3,12 +3,13 @@
 #include <iostream>
 
 using namespace std;
- 
+
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "bitmap_class.h"
 
 using namespace glm;
 
@@ -25,8 +26,8 @@ struct Material
 
 
 	Material( GLint ambientMatLoc,  GLint diffuseMatLoc, 
-			  GLint specularMatLoc, GLint specularExpMatLoc, 
-			  GLint emissiveMatLoc, GLint textureMappedLoc =  0xFFFFFFFF )
+		GLint specularMatLoc, GLint specularExpMatLoc, 
+		GLint emissiveMatLoc, GLint textureMappedLoc =  0xFFFFFFFF )
 	{
 		this->ambientMatLoc = ambientMatLoc;  
 		this->diffuseMatLoc =  diffuseMatLoc;
@@ -49,8 +50,8 @@ struct Material
 	}
 
 	void setUpMaterial( GLint ambientMatLoc = 0xFFFFFFFF,  GLint diffuseMatLoc = 0xFFFFFFFF, 
-						GLint specularMatLoc = 0xFFFFFFFF, GLint specularExpMatLoc= 0xFFFFFFFF, 
-						GLint emissiveMatLoc = 0xFFFFFFFF, GLint textureMappedLoc =  0xFFFFFFFF )
+		GLint specularMatLoc = 0xFFFFFFFF, GLint specularExpMatLoc= 0xFFFFFFFF, 
+		GLint emissiveMatLoc = 0xFFFFFFFF, GLint textureMappedLoc =  0xFFFFFFFF )
 	{
 		this->ambientMatLoc = ambientMatLoc;  
 		this->diffuseMatLoc =  diffuseMatLoc;
@@ -58,7 +59,7 @@ struct Material
 		this->specularExpMatLoc = specularExpMatLoc;
 		this->emissiveMatLoc = emissiveMatLoc;
 		this->textureMappedLoc = textureMappedLoc;
-	
+
 	}
 
 	void setShaderMaterialProperties()
@@ -69,6 +70,13 @@ struct Material
 		setSpecularExponentMat( specularExpMat );
 		setEmissiveMat( emissiveMat );
 		setTextureMapped(textureMapped);
+
+		if ( textureMapped ) {
+			glBindTexture(GL_TEXTURE_2D, textureObject);
+		}
+		else {
+			glBindTexture(GL_TEXTURE_2D, 0);
+		}
 	}
 
 	void setAmbientMat( vec4 ambientMat )
@@ -133,9 +141,29 @@ struct Material
 		setDiffuseMat( objectColor );
 
 	}
-	
+
 	bool getTextureMapped() {return textureMapped; }
 
+	bool setupTexture( string textureFileName )
+	{
+		CBitmap image;
+		if( image.loadBMP((const char *)textureFileName.c_str()) == false ) {
+			cerr << "Unable to load texture!" << endl;
+			return false;
+		}
+		glGenTextures(1, &textureObject);
+		glBindTexture( GL_TEXTURE_2D, textureObject );
+		glTexImage2D( GL_TEXTURE_2D, 0,
+			image.getChannels(),
+			image.getWidth(), image.getHeight(), 0,
+			GL_BGR, GL_UNSIGNED_BYTE, image.getLinePtr(0) );
+		glGenerateMipmap(GL_TEXTURE_2D);
+		glTexParameteri( GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
+		glTexParameteri( GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR );
+		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+		return true;
+	}
 
 	void setTextureMapped(bool on)
 	{
@@ -148,23 +176,26 @@ struct Material
 		}
 	}
 
-	protected: 
+protected: 
 
 	GLint ambientMatLoc;
 	vec4 ambientMat;
 
 	GLint diffuseMatLoc;
 	vec4 diffuseMat;
-	
+
 	GLint specularMatLoc;
 	vec4 specularMat;
-	
+
 	GLint specularExpMatLoc;
 	float specularExpMat;
-	
+
 	GLint emissiveMatLoc;
 	vec4 emissiveMat;
 
 	GLint textureMappedLoc;
 	bool textureMapped;
+
+	// For texture mapping
+	GLuint textureObject;
 };
