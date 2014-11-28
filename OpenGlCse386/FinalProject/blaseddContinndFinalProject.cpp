@@ -22,12 +22,6 @@ public:
 	friend void viewMenu(int value);
 	friend void SpecialKeyboardCB(int Key, int x, int y);
 	Floor2* floor2;
-	Pyramid* pyramid0;
-	Cone *cone;
-	Cube  *cube, *cube2;
-	Sphere* sphere;
-	Cylinder  *cylinder;
-	SpaceShip* ss;
 	Wall* wall;
 	int view;
 	GLfloat rotationX, rotationY, zTrans;
@@ -39,46 +33,6 @@ public:
 		wall = new Wall();
 		wall->fixedTransformation = translate(mat4(1.0f), vec3(0.0f, -3.0f, -4.0f));
 		floor2 = new Floor2();
-		pyramid0 = new Pyramid();
-		pyramid0->addController(new SpinnerController(glm::vec3(0.0f, 0.f, 0.f), glm::vec3(0.0f, 1.0f, 0.0f)));
-		//pyramid0->material.setAmbientAndDiffuseMat( vec4( 0.80f, 0.10f, 0.80f, 1.0f ) );
-		pyramid0->material.setAmbientAndDiffuseMat(vec4(1.0f, 0.0f, 0.0f, 1.0f));
-		pyramid0->material.setEmissiveMat(vec4(0.2f, 0.0f, 0.0f, 1.0f));
-		pyramid0->material.setTextureMapped(true);
-		pyramid0->material.setupTexture("test.bmp");
-		sphere = new Sphere();
-		sphere->fixedTransformation = (rotate(mat4(1.0f), -90.0f, vec3(1,0,0)));
-		sphere->material.setAmbientAndDiffuseMat(vec4(0.9f, 0.1f, 0.1f, 1.0f));
-		sphere->material.setTextureMapped(true);
-		sphere->material.setupTexture("earth.bmp");
-		sphere->addController(new SpinnerController(glm::vec3(3.0f, 0.f, 0.f), glm::vec3(0.0f, 1.0f, 0.0f)));
-		cylinder = new Cylinder();
-		cylinder->material.setTextureMapped(true);
-		cylinder->material.setupTexture("test.bmp");
-		cylinder->material.setAmbientAndDiffuseMat(vec4(0.1f, 0.3f, 0.9f, 1.0f));
-		cylinder->addController(new SpinnerController(glm::vec3(-3.0f, 0.0f, 0.0f),  glm::vec3(0.0f, 0.0f, 1.0f)));
-		cone = new Cone();
-		cone->material.setTextureMapped(true);
-		cone->material.setupTexture("test.bmp");
-		cone->material.setAmbientAndDiffuseMat(vec4(0.1f, 0.9f, 0.9f, 1.0f));
-		cone->addController(new OrbitController(glm::vec3(10.f, 0.f, 0.f), glm::vec3(0.f, -1.f, 0.f), glm::vec3(1.f, 0.f, 0.f),35));
-		cube = new Cube();
-		cube->material.setAmbientAndDiffuseMat(vec4(0.1f, 0.9f, 0.1f, 1.0f));
-		cube->material.setTextureMapped(true);
-		cube->material.setupTexture("face.bmp");
-		vector<glm::vec3> waypoints;
-		waypoints.push_back(glm::vec3(-3.5f, -2.5f, 3.5f));
-		waypoints.push_back(glm::vec3(3.5f, -2.5f, 3.5f));
-		waypoints.push_back(glm::vec3(3.5f, -2.5f, -3.5f));
-		waypoints.push_back(glm::vec3(-3.5f, -2.5f, -3.5f));
-		cube->addController(new WaypointController(waypoints, 1.5f));
-
-		cube2 = new Cube(2.0,2.0,2.0);
-
-		cube2->material.setAmbientAndDiffuseMat(vec4(0.1f, 0.9f, 0.1f, 0.5f));
-		cube2->modelMatrix = translate(mat4(1.0f), vec3(3.0f, 0.f, 0.f));
-
-
 		wall->material.setTextureMapped(true);
 		wall->material.setupTexture("stone.bmp");
 
@@ -87,14 +41,7 @@ public:
 
 
 		addChild(floor2);
-		addChild(pyramid0);
-		addChild(sphere);
-		addChild(cylinder);
-		addChild(cone);
-		addChild(cube);
 		addChild(wall);
-		addChild(cube2);
-		cone->addChild(sound);
 		//sound->play();
 		// Create array of ShaderInfo structs that specifies the vertex and 
 		// fragment shaders to be compiled and linked into a program. 
@@ -109,12 +56,6 @@ public:
 		generalLighting.setUniformBlockForShader(shaderProgram);
 		floor2->setShader(shaderProgram);
 		wall->setShader(shaderProgram);
-		pyramid0->setShader(shaderProgram);
-		sphere->setShader(shaderProgram);
-		cylinder->setShader(shaderProgram);
-		cone->setShader(shaderProgram);
-		cube->setShader(shaderProgram);
-		cube2->setShader(shaderProgram);
 		setupLighting(shaderProgram);
 		soundOn = false;
 	}
@@ -161,29 +102,14 @@ public:
 		GLfloat rotationValue = 0.5f;
 		switch (Key) {
 		case '1':
-			if (pyramid0->getParent() == NULL)
-				this->addChild(pyramid0);
-			else pyramid0->detachFromParent();
 			break;
 		case '2':
-			if (sphere->getParent() == NULL)
-				this->addChild(sphere);
-			else sphere->detachFromParent();
 			break;
 		case '3':
-			if (cylinder->getParent() == NULL)
-				this->addChild(cylinder);
-			else cylinder->detachFromParent();
 			break;
 		case '4':
-			if (cone->getParent() == NULL)
-				this->addChild(cone);
-			else cone->detachFromParent();
 			break;
 		case '5':
-			if (cube->getParent() == NULL)
-				this->addChild(cube);
-			else cube->detachFromParent();
 			break;
 		case 'w' :
 			zTrans += rotationValue;
