@@ -1,10 +1,9 @@
+
 #ifndef OPENGL_APPLICATION_BASE_H
 #define OPENGL_APPLICATION_BASE_H
 
 #include "VisualObject.h"
 #include "SharedProjectionAndViewing.h"
-
-
 const GLint FPS = 60; // Desired maximum number of frames per second
 
 /**
@@ -36,18 +35,6 @@ public:
 	*/
 	void RenderSceneCB();
 
-	GLuint createPointSizeMenu();
-
-	GLuint createAntiAliasingMenu();
-
-	GLuint createFrontFacingMenu();
-	GLuint createLineWidthMenu();
-	void setViewPoint( ); 
-
-
-	// Set up the popup menus
-	void setUpMenus();
-
 	/**
 	* Called whenever the window it resphapes and immediately before a windows 
 	* first display. 
@@ -56,37 +43,50 @@ public:
 	*/
 	virtual void ReshapeCB( int windowWidth, int windowHeight );
 
+	//Sets up the menus, obviously.
+	void setupMenus();
+
+	GLuint createPointSizeMenu();
+
+	GLuint createLineWidthMenu();
+
+	GLuint createAntiAliasingMenu();
+
+	void setViewPoint();
+	
+
 protected:
 
+	SharedProjectionAndViewing projectionAndViewing;
+	GLuint createPolygonMenu();
+	GLuint createFrontFaceMenu();
+	// integer id for top-level popup menu.
+	GLuint topMenu;
 
 	// milliseconds between frames. Used to control the framerate.
 	static const GLint FRAME_INTERVAL = 1000/FPS; 
-	// Integer identifier for the top-level pop-up menu
-	GLuint topMenu;
 
-	GLuint createPolygonMenu();
-	SharedProjectionAndViewing projectionAndViewing;
 
 }; // end OpenGLApplicationBase
 
-void mainMenu(int value);
-
-void polygonMenu(int value);
-
-void pointSizeMenu(int value);
-
-void antiAliasingMenu(int value);
-
-void frontFacingMenu(int value);
-
-void lineWidthMenu(int value);
 
 // Points to the OpenGLApplicationBase object  which was delivered to
 // GLUTBase(). Basic events are forwarded to this object. GlutBase calls the initialize,
 // draw, and render methods through this pointer.
 static OpenGLApplicationBase* s_pOpenGLAppBase;
 
+	//Called when an item on the main menu is selected.
+	void mainMenu(int value);
+
+	void polygonMenu(int value);
+
+	void frontFaceMenu(int value);
+
+	void pointSizeMenu(int value);
+
+	void lineWidthMenu(int value);
+
+	void antiAliasMenu(int value);
+
+
 #endif /* OPENGL_APPLICATION_BASE */
-
-
-

@@ -19,4 +19,9 @@
     <None Include="pcVSUniViewProj.vert" />
     <None Include="pfixed-function-shared-lighting-phong.frag" />
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="blaseddContinndFinalProject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
 </Project>

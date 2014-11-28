@@ -58,7 +58,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\Lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32.lib;freeglut.lib;OpenGlCse386.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;freeglut.lib;OpenGlCse386.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -84,6 +84,9 @@
     <None Include="pcFS.frag" />
     <None Include="pcVSUniViewProj.vert" />
     <None Include="pfixed-function-shared-lighting-phong.frag" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="blaseddContinndFinalProject.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -23,9 +23,7 @@ void Floor::buildShaderProgram()
 void Floor::initialize()
 {
 	glUseProgram(shaderProgram);
-
-	modelLocation = glGetUniformLocation(shaderProgram, "modelMatrix");
-
+	modelLocation = glGetUniformLocation(shaderProgram, "modelMatrix"); 
 	assert(modelLocation != 0xFFFFFFFF);
 	
 	float divisionsPerSide = sideLength;
@@ -49,7 +47,7 @@ void Floor::initialize()
 	GLfloat tileZ = ( (divisionsPerSide/2.0f) * tileWidth);
 
 	// define the two square colors
-	glm::vec4 color1( 0.9f, 0.9f, 0.9f, 1.0f );
+	glm::vec4 color1( 0.0f, 0.0f, 0.0f, 1.0f );
  	glm::vec4 color2( 0.05f, 0.05f, 0.05f, 1.0f );
 	glm::vec4 currentColor;
 	GLuint currentIndex = 0;
