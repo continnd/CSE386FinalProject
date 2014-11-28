@@ -13,6 +13,7 @@
 #include "SpaceShip.h"
 #include "Wall.h"
 #include "SoundSource.h"
+#include "Pig.h"
 
 using namespace glm;
 
@@ -23,6 +24,7 @@ public:
 	friend void SpecialKeyboardCB(int Key, int x, int y);
 	Floor2* floor2;
 	Wall* wall;
+	Pig* pig;
 	int view;
 	GLfloat rotationX, rotationY, zTrans;
 	SharedGeneralLighting generalLighting;
@@ -36,12 +38,14 @@ public:
 		wall->material.setTextureMapped(true);
 		wall->material.setupTexture("stone.bmp");
 
-		sound = new SoundSource("Footsteps.wav"); 
-		sound->setLooping(true); 
+		//sound = new SoundSource("Footsteps.wav"); 
+		//sound->setLooping(true); 
 
+		pig = new Pig();
 
 		addChild(floor2);
 		addChild(wall);
+		addChild(pig);
 		//sound->play();
 		// Create array of ShaderInfo structs that specifies the vertex and 
 		// fragment shaders to be compiled and linked into a program. 
@@ -56,6 +60,9 @@ public:
 		generalLighting.setUniformBlockForShader(shaderProgram);
 		floor2->setShader(shaderProgram);
 		wall->setShader(shaderProgram);
+		pig->setShader(shaderProgram);
+		pig->setAmbientAndDiffuseMat(vec4(1.0f, 0.f, .4f, 1.f));
+		pig->setEmissiveMat(vec4(1.0f, 0.f, .4f, 1.f));
 		setupLighting(shaderProgram);
 		soundOn = false;
 	}

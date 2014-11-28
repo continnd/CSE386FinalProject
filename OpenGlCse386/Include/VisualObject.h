@@ -103,6 +103,8 @@ public:
 	// transformation.
 	glm::mat4 fixedTransformation;
 
+	int getSerialNumber() const { return this->objectSerialNumber; }
+
 protected:
 
 	// Update of the children that can be used when the update function is overriden.

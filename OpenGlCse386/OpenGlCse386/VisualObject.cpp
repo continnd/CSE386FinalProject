@@ -74,7 +74,7 @@ void VisualObject::update(float elapsedTimeSeconds)
 		controller->update( elapsedTimeSeconds );
 	}
 
-	modelAndFixed = getParentModelMatrix() * modelMatrix * fixedTransformation;
+	modelAndFixed = getParentModelMatrix() * fixedTransformation * modelMatrix ;
 
 	updateChildren(elapsedTimeSeconds);
 

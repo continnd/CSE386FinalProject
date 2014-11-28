@@ -171,7 +171,7 @@ void main()
 	
 		FragColor += calcLight( lights[i], texturedMaterial );
 	}
-	FragColor = fogFactor * FragColor + (1-fogFactor) * fogColor;
+	//FragColor = fogFactor * FragColor + (1-fogFactor) * fogColor;
 
 	FragColor.a = object.diffuseMat.a;
 }

@@ -87,6 +87,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="blaseddContinndFinalProject.cpp" />
+    <ClCompile Include="Pig.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Pig.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

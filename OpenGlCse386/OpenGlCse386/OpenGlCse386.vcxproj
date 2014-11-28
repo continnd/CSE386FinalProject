@@ -55,6 +55,7 @@
     <ClInclude Include="efx.h" />
     <ClInclude Include="Floor.h" />
     <ClInclude Include="Floor2.h" />
+    <ClInclude Include="font.h" />
     <ClInclude Include="Framework.h" />
     <ClInclude Include="glutBase.h" />
     <ClInclude Include="LoadOAL.h" />
