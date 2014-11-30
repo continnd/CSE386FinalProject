@@ -15,13 +15,18 @@
 #include "SoundSource.h"
 #include "Pig.h"
 
+#define M_PI 3.1415926535897932384626433832795f
+
 using namespace glm;
+float mouse_x, mouse_y, lookAtAngleYZ, lookAtAngleXZ;
+vec3 playerPos;
 
 class blaseddContinndFinalProject : public OpenGLApplicationBase
 {
 public:
 	friend void viewMenu(int value);
 	friend void SpecialKeyboardCB(int Key, int x, int y);
+	friend void getMousePos(int x, int y);
 	Floor2* floor2;
 	Wall* wall;
 	Pig* pig;
@@ -30,8 +35,14 @@ public:
 	SharedGeneralLighting generalLighting;
 	SoundSource* sound;
 	bool soundOn;
-	blaseddContinndFinalProject() : view(0), rotationX(0.0f), rotationY(0.0f), zTrans(-12.0f)
+	vec3 direction;
+	blaseddContinndFinalProject() : view(7), rotationX(0.0f), rotationY(0.0f), zTrans(-12.0f)
 	{
+		glutSetCursor(GLUT_CURSOR_NONE);
+		direction = vec3(0.0f, 0.0f, -1.0f);
+		lookAtAngleYZ = 0.0;
+		lookAtAngleXZ = 0.0;
+		playerPos = vec3(0.0f, 0.0f, 12.0f);
 		wall = new Wall();
 		wall->fixedTransformation = translate(mat4(1.0f), vec3(0.0f, -3.0f, -4.0f));
 		floor2 = new Floor2();
@@ -119,16 +130,22 @@ public:
 		case '5':
 			break;
 		case 'w' :
-			zTrans += rotationValue;
+			playerPos += vec3(sin(lookAtAngleXZ), 0.0f, -cos(lookAtAngleXZ));
 			break;
 		case 's':
-			zTrans -= rotationValue;
+			playerPos -= vec3(sin(lookAtAngleXZ), 0.0f, -cos(lookAtAngleXZ));
 			break;
 		case 'a':
+			playerPos -= vec3(sin(lookAtAngleXZ + 90.0f), 0.0f, -cos(lookAtAngleXZ + 90.0f));
+			break;
+		case 'd':
+			playerPos += vec3(sin(lookAtAngleXZ + 90.0f), 0.0f, -cos(lookAtAngleXZ + 90.0f));
+			break;
+		case 'j':
 			lightOn = generalLighting.getEnabled( GL_LIGHT_ZERO );
 			generalLighting.setEnabled( GL_LIGHT_ZERO, !lightOn );
 			break;
-		case 'd':
+		case 'l':
 			lightOn = generalLighting.getEnabled( GL_LIGHT_ONE );
 			generalLighting.setEnabled( GL_LIGHT_ONE, !lightOn );
 			break;
@@ -188,7 +205,18 @@ public:
 	// Update scene objects inbetween frames 
 	virtual void update( float elapsedTimeSec ) 
 	{ 
-		setViewPoint(); 
+		float windowWidth = glutGet(GLUT_WINDOW_WIDTH)/2;
+		float windowHeight = glutGet(GLUT_WINDOW_HEIGHT)/2;
+		glutPassiveMotionFunc(getMousePos);
+		if(view == 7)
+			glutWarpPointer(windowWidth, windowHeight);
+		lookAtAngleXZ += ((mouse_x-windowWidth)/(windowWidth)/2.0f)*M_PI/2.0f;
+		lookAtAngleYZ -= ((mouse_y-windowHeight)/(windowHeight)/2.0f)*M_PI/2.0f;
+		if(lookAtAngleYZ > 80.0f * M_PI/180)
+			lookAtAngleYZ = 80.0f * M_PI/180;
+		else if(lookAtAngleYZ < -80.0f * M_PI/180)
+			lookAtAngleYZ = -80.0f * M_PI/180;
+		setViewPoint();
 		VisualObject::update(elapsedTimeSec);
 	} // end update
 
@@ -230,10 +258,11 @@ public:
 			projectionAndViewing.setViewMatrix(viewMatrix);
 			break;
 		case 7:
-			glm::mat4 transView = glm::translate(glm::mat4(1.0f), glm::vec3( 0.0f, 0.0f, zTrans ));
-			glm::mat4 rotateViewX = glm::rotate(glm::mat4(1.0f), rotationX, glm::vec3(1.0f, 0.0f, 0.0f));
-			glm::mat4 rotateViewY = glm::rotate(glm::mat4(1.0f), rotationY, glm::vec3(0.0f, 1.0f, 0.0f));
-			projectionAndViewing.setViewMatrix( transView * rotateViewX * rotateViewY );
+			vec3 direction = glm::vec3(sin(lookAtAngleXZ)*cos(lookAtAngleYZ), sin(lookAtAngleYZ),
+				-(cos(lookAtAngleXZ) * cos(lookAtAngleYZ)));
+			vec3 right = vec3(sin(lookAtAngleXZ + M_PI / 2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI / 2.0f));
+			viewMatrix = glm::lookAt(playerPos, playerPos + direction, vec3(0.0f, 1.0f, 0.0f));
+			projectionAndViewing.setViewMatrix(viewMatrix);
 		}
 
 	}
@@ -289,11 +318,16 @@ protected:
 		glutAddMenuEntry("View 6", 6);
 		glutAddMenuEntry("View 7", 7);
 
-
 		return menuId;
 	}
 
 };
+
+void getMousePos(int x, int y) {
+	mouse_x=x;
+	mouse_y=y;
+}
+
 blaseddContinndFinalProject* labClassPtr;
 int main(int argc, char** argv) 
 {
@@ -311,6 +345,11 @@ void viewMenu (int value)
 {
 	labClassPtr-> view = value;
 	cout << "View point " << value << endl;
+	if(labClassPtr -> view == 7)
+		glutSetCursor(GLUT_CURSOR_NONE);
+	else {
+		glutSetCursor(GLUT_CURSOR_LEFT_ARROW);
+	}
 } // end viewMenu
 
 void SpecialKeyboardCB(int Key, int x, int y)
