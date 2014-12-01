@@ -14,11 +14,13 @@
 #include "Wall.h"
 #include "SoundSource.h"
 #include "Pig.h"
+#include "UFO.h"
 
 #define M_PI 3.1415926535897932384626433832795f
 
 using namespace glm;
-float mouse_x, mouse_y, lookAtAngleYZ, lookAtAngleXZ;
+int mouse_x, mouse_y;
+float lookAtAngleYZ, lookAtAngleXZ;
 vec3 playerPos;
 
 class blaseddContinndFinalProject : public OpenGLApplicationBase
@@ -30,6 +32,7 @@ public:
 	Floor2* floor2;
 	Wall* wall;
 	Pig* pig;
+	UFO* ufo;
 	int view;
 	GLfloat rotationX, rotationY, zTrans;
 	SharedGeneralLighting generalLighting;
@@ -53,10 +56,12 @@ public:
 		//sound->setLooping(true); 
 
 		pig = new Pig();
+		ufo = new UFO();
 
 		addChild(floor2);
 		addChild(wall);
 		addChild(pig);
+		addChild(ufo);
 		//sound->play();
 		// Create array of ShaderInfo structs that specifies the vertex and 
 		// fragment shaders to be compiled and linked into a program. 
@@ -71,11 +76,13 @@ public:
 		generalLighting.setUniformBlockForShader(shaderProgram);
 		floor2->setShader(shaderProgram);
 		wall->setShader(shaderProgram);
+		ufo->setShader(shaderProgram);
 		pig->setShader(shaderProgram);
 		pig->setAmbientAndDiffuseMat(vec4(1.0f, 0.f, .4f, 1.f));
 		pig->setEmissiveMat(vec4(1.0f, 0.f, .4f, 1.f));
 		setupLighting(shaderProgram);
 		soundOn = false;
+		ufo -> modelMatrix = translate(mat4(1.0f), vec3(3.0f, 0.0f, 0.0f));
 	}
 
 	void setupLighting(GLuint shaderProgram) {
@@ -205,11 +212,11 @@ public:
 	// Update scene objects inbetween frames 
 	virtual void update( float elapsedTimeSec ) 
 	{ 
-		float windowWidth = glutGet(GLUT_WINDOW_WIDTH)/2;
-		float windowHeight = glutGet(GLUT_WINDOW_HEIGHT)/2;
+		float windowWidth = float(glutGet(GLUT_WINDOW_WIDTH)/2);
+		float windowHeight = float(glutGet(GLUT_WINDOW_HEIGHT)/2);
 		glutPassiveMotionFunc(getMousePos);
 		if(view == 7)
-			glutWarpPointer(windowWidth, windowHeight);
+			glutWarpPointer((int)windowWidth, (int)windowHeight);
 		lookAtAngleXZ += ((mouse_x-windowWidth)/(windowWidth)/2.0f)*M_PI/2.0f;
 		lookAtAngleYZ -= ((mouse_y-windowHeight)/(windowHeight)/2.0f)*M_PI/2.0f;
 		if(lookAtAngleYZ > 80.0f * M_PI/180)

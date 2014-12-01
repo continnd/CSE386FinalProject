@@ -35,6 +35,7 @@
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="SpinnerController.cpp" />
     <ClCompile Include="textureCoordinates.cpp" />
+    <ClCompile Include="UFO.cpp" />
     <ClCompile Include="VisualObject.cpp" />
     <ClCompile Include="Wall.cpp" />
     <ClCompile Include="WaypointController.cpp" />
@@ -70,6 +71,7 @@
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="SpinnerController.h" />
     <ClInclude Include="textureCoordinates.h" />
+    <ClInclude Include="UFO.h" />
     <ClInclude Include="vertexStructs.h" />
     <ClInclude Include="VisualObject.h" />
     <ClInclude Include="Wall.h" />
