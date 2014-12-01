@@ -333,7 +333,7 @@ void viewMenu (int value)
 {
 	labClassPtr-> view = value;
 	cout << "View point " << value << endl;
-	if(labClassPtr -> view == 7)
+	if(labClassPtr -> view == 2)
 		glutSetCursor(GLUT_CURSOR_NONE);
 	else {
 		glutSetCursor(GLUT_CURSOR_LEFT_ARROW);
