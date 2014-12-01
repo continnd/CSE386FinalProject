@@ -48,8 +48,8 @@ void Pig::setAmbientAndDiffuseMat(vec4 mat){
 	blLeg->material.setAmbientAndDiffuseMat(mat);
 	body->material.setAmbientAndDiffuseMat(mat);
 	face->material.setAmbientAndDiffuseMat(mat);
-	rightEye->material.setAmbientAndDiffuseMat(vec4(0, 0, 0, 1));
-	leftEye->material.setAmbientAndDiffuseMat(vec4(0, 0, 0, 1));
+	rightEye->material.setAmbientAndDiffuseMat(vec4(.5, 0, 0, 1));
+	leftEye->material.setAmbientAndDiffuseMat(vec4(.5, 0, 0, 1));
 	leftNostril->material.setAmbientAndDiffuseMat(vec4(0, 0, 0, 1));
 	rightNostril->material.setAmbientAndDiffuseMat(vec4(0, 0, 0, 1));
 }
