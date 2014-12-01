@@ -2,3 +2,7 @@
 *.obj
 *.lib
 *.suo
+*.exe
+*.tlog
+*.pdb
+*.lastbuildstate
