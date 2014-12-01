@@ -146,10 +146,10 @@ public:
 			playerPos -= vec3(sin(lookAtAngleXZ), 0.0f, -cos(lookAtAngleXZ));
 			break;
 		case 'a':
-			playerPos -= vec3(sin(lookAtAngleXZ + 90.0f), 0.0f, -cos(lookAtAngleXZ + 90.0f));
+			playerPos -= vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f));
 			break;
 		case 'd':
-			playerPos += vec3(sin(lookAtAngleXZ + 90.0f), 0.0f, -cos(lookAtAngleXZ + 90.0f));
+			playerPos += vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f));
 			break;
 		case 'j':
 			lightOn = generalLighting.getEnabled( GL_LIGHT_ZERO );
