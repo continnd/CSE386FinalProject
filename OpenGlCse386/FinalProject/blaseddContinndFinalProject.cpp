@@ -39,7 +39,7 @@ public:
 	SoundSource* sound;
 	bool soundOn;
 	vec3 direction;
-	blaseddContinndFinalProject() : view(7), rotationX(0.0f), rotationY(0.0f), zTrans(-12.0f)
+	blaseddContinndFinalProject() : view(0), rotationX(0.0f), rotationY(0.0f), zTrans(-12.0f)
 	{
 		glutSetCursor(GLUT_CURSOR_NONE);
 		direction = vec3(0.0f, 0.0f, -1.0f);
@@ -78,8 +78,11 @@ public:
 		wall->setShader(shaderProgram);
 		ufo->setShader(shaderProgram);
 		pig->setShader(shaderProgram);
-		pig->setAmbientAndDiffuseMat(vec4(1.0f, 0.f, .4f, 1.f));
-		pig->setEmissiveMat(vec4(1.0f, 0.f, .4f, 1.f));
+		pig->setAmbientAndDiffuseMat(vec4(0.f, 0.0f, 0.0f, 0.f));
+		pig->setEmissiveMat(vec4(0.f, 0.0f, .0f, 0.f));
+		pig->setSpecularMat(vec4(0.f, 0.0f, .0f, 0.f));
+		pig->setTextureMapped(true);
+		pig->setTexture("metal.bmp");
 		setupLighting(shaderProgram);
 		soundOn = false;
 		ufo -> modelMatrix = translate(mat4(1.0f), vec3(3.0f, 0.0f, 0.0f));
