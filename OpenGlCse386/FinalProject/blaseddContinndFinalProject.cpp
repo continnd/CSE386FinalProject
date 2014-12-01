@@ -38,10 +38,17 @@ public:
 	SharedGeneralLighting generalLighting;
 	SoundSource* sound;
 	bool soundOn;
+	bool moveForward;
+	bool moveBack;
+	bool moveLeft;
+	bool moveRight;
 	vec3 direction;
 	blaseddContinndFinalProject() : view(0), rotationX(0.0f), rotationY(0.0f), zTrans(-12.0f)
 	{
-		glutSetCursor(GLUT_CURSOR_NONE);
+		moveForward = false;
+		moveBack = false;
+		moveLeft = false;
+		moveRight = false;
 		direction = vec3(0.0f, 0.0f, -1.0f);
 		lookAtAngleYZ = 0.0;
 		lookAtAngleXZ = 0.0;
@@ -140,20 +147,24 @@ public:
 		case '5':
 			break;
 		case 'w' :
+			moveForward = true;
 			if(view == 2)
 				playerPos += vec3(sin(lookAtAngleXZ), 0.0f, -cos(lookAtAngleXZ));
 			else if(view == 1)
 				playerPos += normalize(vec3(mouse_x-glutGet(GLUT_WINDOW_WIDTH)/2, 0.0f, mouse_y-glutGet(GLUT_WINDOW_HEIGHT)/2));
 			break;
 		case 's':
+			moveBack = true;
 			if(view == 2)
 				playerPos -= vec3(sin(lookAtAngleXZ), 0.0f, -cos(lookAtAngleXZ));
 			break;
 		case 'a':
+			moveLeft = true;
 			if(view == 2)
 				playerPos -= vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f));
 			break;
 		case 'd':
+			moveRight = true;
 			if(view == 2)
 				playerPos += vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f));
 			break;
@@ -180,6 +191,26 @@ public:
 			break;
 		default:
 			OpenGLApplicationBase::KeyboardCB(Key, x, y);
+		}
+	}
+
+	void KeyboardUpCB(unsigned char Key, int x, int y) 
+	{
+		switch (Key) {
+		case 'w' :
+			moveForward = false;
+			break;
+		case 's':
+			moveBack = false;
+			break;
+		case 'a':
+			moveLeft = false;
+			break;
+		case 'd':
+			moveRight = false;
+			break;
+		default:
+			OpenGLApplicationBase::KeyboardUpCB(Key, x, y);
 		}
 	}
 
@@ -235,6 +266,16 @@ public:
 		setViewPoint();
 		VisualObject::update(elapsedTimeSec);
 		ufo -> modelMatrix = translate(mat4(1.0f), playerPos);
+		if(view == 2 && moveForward)
+			playerPos += .25f*normalize(vec3(sin(lookAtAngleXZ), 0.0f, -cos(lookAtAngleXZ)));
+		else if(view == 1 && moveForward)
+			playerPos += .25f*normalize(vec3(mouse_x-glutGet(GLUT_WINDOW_WIDTH)/2, 0.0f, mouse_y-glutGet(GLUT_WINDOW_HEIGHT)/2));
+		if(view == 2 && moveBack)
+			playerPos -= .25f*normalize(vec3(sin(lookAtAngleXZ), 0.0f, -cos(lookAtAngleXZ)));
+		if(view == 2 && moveLeft)
+			playerPos -= .25f*normalize(vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f)));
+		if(view == 2 && moveRight)
+			playerPos += .25f*normalize(vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f)));
 	} // end update
 
 	virtual void setViewPoint() 
@@ -297,67 +338,67 @@ public:
 		lastViewPosition = viewPosition;
 	} // end listenerUpdate
 
-protected:
-	GLuint createViewMenu()
+	protected:
+		GLuint createViewMenu()
+		{
+			GLuint menuId = glutCreateMenu(viewMenu);
+			// Specify menu items and their integer identifiers
+			glutAddMenuEntry("Default", 0);
+			glutAddMenuEntry("View 1", 1);
+			glutAddMenuEntry("View 2", 2);
+
+			return menuId;
+		}
+
+	};
+
+	void getMousePos(int x, int y) {
+		mouse_x=x;
+		mouse_y=y;
+	}
+
+	blaseddContinndFinalProject* labClassPtr;
+	int main(int argc, char** argv) 
 	{
-		GLuint menuId = glutCreateMenu(viewMenu);
-		// Specify menu items and their integer identifiers
-		glutAddMenuEntry("Default", 0);
-		glutAddMenuEntry("View 1", 1);
-		glutAddMenuEntry("View 2", 2);
+		GLUTBaseInit(argc, argv);
+		GLUTBaseCreateWindow( "CSE 386 Lab 10" );
 
-		return menuId;
+		blaseddContinndFinalProject pApp;
+
+		labClassPtr = &pApp;
+		GLUTBaseRunApplication(&pApp);
+
 	}
 
-};
+	void viewMenu (int value)
+	{
+		labClassPtr-> view = value;
+		cout << "View point " << value << endl;
+		if(labClassPtr -> view == 2)
+			glutSetCursor(GLUT_CURSOR_NONE);
+		else {
+			glutSetCursor(GLUT_CURSOR_LEFT_ARROW);
+		}
+	} // end viewMenu
 
-void getMousePos(int x, int y) {
-	mouse_x=x;
-	mouse_y=y;
-}
-
-blaseddContinndFinalProject* labClassPtr;
-int main(int argc, char** argv) 
-{
-	GLUTBaseInit(argc, argv);
-	GLUTBaseCreateWindow( "CSE 386 Lab 10" );
-
-	blaseddContinndFinalProject pApp;
-
-	labClassPtr = &pApp;
-	GLUTBaseRunApplication(&pApp);
-
-}
-
-void viewMenu (int value)
-{
-	labClassPtr-> view = value;
-	cout << "View point " << value << endl;
-	if(labClassPtr -> view == 2)
-		glutSetCursor(GLUT_CURSOR_NONE);
-	else {
-		glutSetCursor(GLUT_CURSOR_LEFT_ARROW);
+	void SpecialKeyboardCB(int Key, int x, int y)
+	{
+		GLfloat rotationValue = 0.5f;
+		switch (Key) {
+		case GLUT_KEY_RIGHT:
+			labClassPtr->rotationY +=rotationValue;
+			break;
+		case GLUT_KEY_LEFT:
+			labClassPtr->rotationY -=rotationValue;
+			break;
+		case GLUT_KEY_UP:
+			labClassPtr->rotationX += rotationValue;
+			break;
+		case GLUT_KEY_DOWN:
+			labClassPtr->rotationX -= rotationValue;
+			break;
+		default:
+			break;
+		}
+		cout << "key with ascii code " << x << " pressed." << endl;
 	}
-} // end viewMenu
-
-void SpecialKeyboardCB(int Key, int x, int y)
-{
-	GLfloat rotationValue = 0.5f;
-	switch (Key) {
-	case GLUT_KEY_RIGHT:
-		labClassPtr->rotationY +=rotationValue;
-		break;
-	case GLUT_KEY_LEFT:
-		labClassPtr->rotationY -=rotationValue;
-		break;
-	case GLUT_KEY_UP:
-		labClassPtr->rotationX += rotationValue;
-		break;
-	case GLUT_KEY_DOWN:
-		labClassPtr->rotationX -= rotationValue;
-		break;
-	default:
-		break;
-	}
-	cout << "key with ascii code " << x << " pressed." << endl;
-}

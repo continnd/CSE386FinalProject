@@ -19,6 +19,12 @@ static void KeyboardCB(unsigned char Key, int x, int y)
 
 } // end KeyboardCB
 
+static void KeyboardUpCB(unsigned char Key, int x, int y)
+{
+	s_pOpenGLAppBase->KeyboardUpCB( Key, x, y );
+
+} // end KeyboardCB
+
 /**
 * Function: 
 * Acts as the display function for the window. Calls a method of the the OpenGLApplicationBase 
@@ -111,6 +117,7 @@ static void ReshapeCB(int windowWidth, int windowHeight)
 static void registerCallBacks()
 {
 	glutKeyboardFunc(KeyboardCB); // callback for ascii character input
+	glutKeyboardUpFunc(KeyboardUpCB);
 	glutDisplayFunc(RenderSceneCB); // callback for window redisplay
 	glutIdleFunc(IdleCB); // idle callback
 	glutVisibilityFunc(VisibilityCB); // callback for visibility changes

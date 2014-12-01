@@ -20,6 +20,10 @@ void OpenGLApplicationBase::KeyboardCB(unsigned char Key, int x, int y)
 
 } // end KeyboardCB
 
+void OpenGLApplicationBase::KeyboardUpCB(unsigned char Key, int x, int y)
+{
+}
+
 void OpenGLApplicationBase::setViewPoint( ) { 
 	glm::mat4 viewMatrix = glm::translate(glm::mat4(1.0f), 
 		glm::vec3( 0.0f, 0.0f, -12 ));

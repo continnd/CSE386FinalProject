@@ -27,6 +27,8 @@ public:
 	*/
 	virtual void OpenGLApplicationBase::KeyboardCB(unsigned char Key, int x, int y);
 
+	virtual void OpenGLApplicationBase::KeyboardUpCB(unsigned char Key, int x, int y);
+
 	/**
 	* Acts as the display function for the window. Renders and updates the entire scene each
 	* time it is callded as long as sufficient time has pass since the last rendering.
