@@ -285,6 +285,10 @@ void Sphere::initializeSphereBottom()
 // Preform drawing operations
 void Sphere::draw()
 {
+	glEnable (GL_BLEND);
+
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	glUseProgram(shaderProgram);
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, value_ptr(modelAndFixed));
 
@@ -301,6 +305,8 @@ void Sphere::draw()
 	// Draw bottom
 	glBindVertexArray(vertexArrayObjectForBottom);
     glDrawElements(GL_TRIANGLES, bottomIndicesCount, GL_UNSIGNED_INT, 0);
+
+    glDisable (GL_BLEND);
 
 	// Draw all children
 	VisualObject::draw();
