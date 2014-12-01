@@ -31,8 +31,7 @@ void UFO::setShader(GLuint shaderProgram) {
 	bottom->material.setDiffuseMat(vec4(0.0f,0.0f,0.0f,1.0f));
 	bottom->material.setEmissiveMat(vec4(0.0f,0.0f,0.0f,1.0f));
 	bottom->material.setSpecularMat(vec4(0.0f,0.0f,0.0f,1.0f));
-	cockpit->material.setAmbientMat(vec4(0.5f,0.0f,0.0f,0.5f));
-	cockpit->material.setDiffuseMat(vec4(0.5f,0.0f,0.0f,0.5f));
+	cockpit->material.setAmbientAndDiffuseMat(vec4(0.5f,0.0f,0.0f,0.5f));
 	cockpit->material.setEmissiveMat(vec4(0.5f,0.0f,0.0f,1.0f));
 	cockpit->material.setSpecularMat(vec4(0.5f, 0.0f,0.0f,1.0f));
 }
