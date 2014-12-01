@@ -6,3 +6,5 @@
 *.tlog
 *.pdb
 *.lastbuildstate
+*.sdf
+*.opensdf
