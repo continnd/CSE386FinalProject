@@ -16,8 +16,8 @@ class Wall : public VisualObject
 
 		virtual void draw();
 
-		int getHeight const () { return height; }
-		int getWidth const () { return width; }
+		int getHeight () const { return height; }
+		int getWidth () const { return width; }
 
 	protected:
 	
