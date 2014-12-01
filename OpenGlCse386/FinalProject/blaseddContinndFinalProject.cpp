@@ -78,9 +78,9 @@ public:
 		wall->setShader(shaderProgram);
 		ufo->setShader(shaderProgram);
 		pig->setShader(shaderProgram);
-		pig->setAmbientAndDiffuseMat(vec4(0.f, 0.0f, 0.0f, 0.f));
-		pig->setEmissiveMat(vec4(0.f, 0.0f, .0f, 0.f));
-		pig->setSpecularMat(vec4(0.f, 0.0f, .0f, 0.f));
+		pig->setAmbientAndDiffuseMat(vec4(0.f, 0.0f, 0.0f, 1.f));
+		pig->setEmissiveMat(vec4(0.f, 0.0f, .0f, 1.f));
+		pig->setSpecularMat(vec4(0.f, 0.0f, .0f, 1.f));
 		pig->setTextureMapped(true);
 		pig->setTexture("metal.bmp");
 		setupLighting(shaderProgram);
