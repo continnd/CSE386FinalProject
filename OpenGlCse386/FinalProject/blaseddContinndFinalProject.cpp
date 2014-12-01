@@ -85,7 +85,7 @@ public:
 		pig->setTexture("metal.bmp");
 		setupLighting(shaderProgram);
 		soundOn = false;
-		ufo -> modelMatrix = translate(mat4(1.0f), vec3(3.0f, 0.0f, 0.0f));
+		ufo -> modelMatrix = translate(mat4(1.0f), playerPos);
 	}
 
 	void setupLighting(GLuint shaderProgram) {
@@ -140,16 +140,22 @@ public:
 		case '5':
 			break;
 		case 'w' :
-			playerPos += vec3(sin(lookAtAngleXZ), 0.0f, -cos(lookAtAngleXZ));
+			if(view == 2)
+				playerPos += vec3(sin(lookAtAngleXZ), 0.0f, -cos(lookAtAngleXZ));
+			else if(view == 1)
+				playerPos += normalize(vec3(mouse_x-glutGet(GLUT_WINDOW_WIDTH)/2, 0.0f, mouse_y-glutGet(GLUT_WINDOW_HEIGHT)/2));
 			break;
 		case 's':
-			playerPos -= vec3(sin(lookAtAngleXZ), 0.0f, -cos(lookAtAngleXZ));
+			if(view == 2)
+				playerPos -= vec3(sin(lookAtAngleXZ), 0.0f, -cos(lookAtAngleXZ));
 			break;
 		case 'a':
-			playerPos -= vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f));
+			if(view == 2)
+				playerPos -= vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f));
 			break;
 		case 'd':
-			playerPos += vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f));
+			if(view == 2)
+				playerPos += vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f));
 			break;
 		case 'j':
 			lightOn = generalLighting.getEnabled( GL_LIGHT_ZERO );
@@ -218,7 +224,7 @@ public:
 		float windowWidth = float(glutGet(GLUT_WINDOW_WIDTH)/2);
 		float windowHeight = float(glutGet(GLUT_WINDOW_HEIGHT)/2);
 		glutPassiveMotionFunc(getMousePos);
-		if(view == 7)
+		if(view == 2)
 			glutWarpPointer((int)windowWidth, (int)windowHeight);
 		lookAtAngleXZ += ((mouse_x-windowWidth)/(windowWidth)/2.0f)*M_PI/2.0f;
 		lookAtAngleYZ -= ((mouse_y-windowHeight)/(windowHeight)/2.0f)*M_PI/2.0f;
@@ -228,6 +234,7 @@ public:
 			lookAtAngleYZ = -80.0f * M_PI/180;
 		setViewPoint();
 		VisualObject::update(elapsedTimeSec);
+		ufo -> modelMatrix = translate(mat4(1.0f), playerPos);
 	} // end update
 
 	virtual void setViewPoint() 
@@ -240,34 +247,10 @@ public:
 			projectionAndViewing.setViewMatrix(viewMatrix);
 			break;
 		case 1:
-			viewMatrix = glm::translate(glm::mat4(1.0f),
-				glm::vec3( 0.0f, 0.0f, -10 ));
+			viewMatrix = glm::lookAt(glm::vec3(playerPos.x, 20.f, playerPos.z), playerPos, glm::vec3(0,0,-1));
 			projectionAndViewing.setViewMatrix(viewMatrix);
 			break;
 		case 2:
-			viewMatrix = glm::translate(glm::mat4(1.0f),
-				glm::vec3( 0.0f, 0.0f, -10 )) * glm::rotate(glm::mat4(1.0f), fmod(45.0f, 360.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-			projectionAndViewing.setViewMatrix(viewMatrix);
-			break;
-		case 3:
-			viewMatrix = glm::translate(glm::mat4(1.0f),
-				glm::vec3( 0.0f, 0.0f, -10 )) * glm::rotate(glm::mat4(1.0f), fmod(90.0f, 360.0f), glm::vec3(1.0f, 0.0f, 0.0f))
-				* glm::rotate(glm::mat4(1.0f), fmod(90.0f, 360.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-			projectionAndViewing.setViewMatrix(viewMatrix);
-			break;
-		case 4:
-			viewMatrix = glm::lookAt(glm::vec3(0.f, 0.f, 10), glm::vec3(0,0,0), glm::vec3(0, 1,0 ));
-			projectionAndViewing.setViewMatrix(viewMatrix);
-			break;
-		case 5:
-			viewMatrix = glm::lookAt(glm::vec3(0.f, 7.1f, 7.1f), glm::vec3(0,0,0), glm::vec3(0, 1,0 ));
-			projectionAndViewing.setViewMatrix(viewMatrix);
-			break;
-		case 6:
-			viewMatrix = glm::lookAt(glm::vec3(0.f, 10.f, 0), glm::vec3(0,0,0), glm::vec3(1,0, 0 ));
-			projectionAndViewing.setViewMatrix(viewMatrix);
-			break;
-		case 7:
 			vec3 direction = glm::vec3(sin(lookAtAngleXZ)*cos(lookAtAngleYZ), sin(lookAtAngleYZ),
 				-(cos(lookAtAngleXZ) * cos(lookAtAngleYZ)));
 			vec3 right = vec3(sin(lookAtAngleXZ + M_PI / 2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI / 2.0f));
@@ -322,11 +305,6 @@ protected:
 		glutAddMenuEntry("Default", 0);
 		glutAddMenuEntry("View 1", 1);
 		glutAddMenuEntry("View 2", 2);
-		glutAddMenuEntry("View 3", 3);
-		glutAddMenuEntry("View 4", 4);
-		glutAddMenuEntry("View 5", 5);
-		glutAddMenuEntry("View 6", 6);
-		glutAddMenuEntry("View 7", 7);
 
 		return menuId;
 	}
