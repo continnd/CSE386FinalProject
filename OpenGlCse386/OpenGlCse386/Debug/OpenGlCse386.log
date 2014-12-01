@@ -1,5 +1,82 @@
-﻿Build started 11/28/2014 4:26:46 PM.
+﻿Build started 11/29/2014 8:13:29 PM.
+     1>Project "D:\Nick\Documents\CSE386FinalProject\OpenGlCse386\OpenGlCse386\OpenGlCse386.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         D:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt glutBase.cpp
+         glutBase.cpp
+       Lib:
+         D:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\Lib.exe /OUT:"D:\Nick\Documents\CSE386FinalProject\OpenGlCse386\Debug\OpenGlCse386.lib" /NOLOGO Debug\aldlist.obj
+         Debug\bitmap_class.obj
+         Debug\BuildShaderProgram.obj
+         Debug\Cone.obj
+         Debug\Controller.obj
+         Debug\Cube.obj
+         Debug\CWaves.obj
+         Debug\Cylinder.obj
+         Debug\Floor.obj
+         Debug\Floor2.obj
+         Debug\Framework.obj
+         Debug\glutBase.obj
+         Debug\LoadOAL.obj
+         Debug\Material.obj
+         Debug\OpenGLApplicationBase.obj
+         Debug\OrbitController.obj
+         Debug\Pyramid.obj
+         Debug\SharedGeneralLighting.obj
+         Debug\SharedProjectionAndViewing.obj
+         Debug\SoundSource.obj
+         Debug\SpaceShip.obj
+         Debug\Sphere.obj
+         Debug\SpinnerController.obj
+         Debug\textureCoordinates.obj
+         Debug\VisualObject.obj
+         Debug\Wall.obj
+         Debug\WaypointController.obj
+         OpenGlCse386.vcxproj -> D:\Nick\Documents\CSE386FinalProject\OpenGlCse386\Debug\OpenGlCse386.lib
+       PostBuildEvent:
+         copy "*.h" "D:\Nick\Documents\CSE386FinalProject\OpenGlCse386\"\Include\
+         copy "D:\Nick\Documents\CSE386FinalProject\OpenGlCse386\Debug\OpenGlCse386.lib" "D:\Nick\Documents\CSE386FinalProject\OpenGlCse386\"\"Lib\OpenGlCse386.lib"
+         :VCEnd
+         al.h
+         alc.h
+         aldlist.h
+         bitmap_class.h
+         BuildShaderProgram.h
+         Cone.h
+         Controller.h
+         Cube.h
+         CWaves.h
+         Cylinder.h
+         efx-creative.h
+         EFX-Util.h
+         efx.h
+         Floor.h
+         Floor2.h
+         font.h
+         Framework.h
+         glutBase.h
+         GlutObject.h
+         LoadOAL.h
+         Material.h
+         OpenGLApplicationBase.h
+         OrbitController.h
+         Pyramid.h
+         SharedGeneralLighting.h
+         SharedProjectionAndViewing.h
+         SoundSource.h
+         SpaceShip.h
+         Sphere.h
+         SpinnerController.h
+         textureCoordinates.h
+         Torus.h
+         vertexStructs.h
+         VisualObject.h
+         Wall.h
+         WaypointController.h
+         xram.h
+                37 file(s) copied.
+                 1 file(s) copied.
+     1>Done Building Project "D:\Nick\Documents\CSE386FinalProject\OpenGlCse386\OpenGlCse386\OpenGlCse386.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:00.01
+Time Elapsed 00:00:04.52
