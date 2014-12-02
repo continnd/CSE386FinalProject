@@ -23,6 +23,7 @@ class Wall : public VisualObject
 
 		vec3 getStartPoint() const { return startPoint; }
 		vec3 getEndPoint() const { return endPoint; }
+		vec3 getOrientation() const { return orientation; }
 
 	protected:
 	

@@ -54,8 +54,6 @@ public:
 		lookAtAngleXZ = 0.0;
 		playerPos = vec3(0.0f, 0.0f, 12.0f);
 		wall = new Wall();
-		wall->fixedTransformation = translate(mat4(1.0f), vec3(0.0f, -3.0f, -4.0f));
-		wall->setOrientation(vec3(1,0,0));
 		floor2 = new Floor2();
 		wall->material.setTextureMapped(true);
 		wall->material.setupTexture("stone.bmp");
@@ -93,6 +91,9 @@ public:
 		pig->setTexture("metal.bmp");
 		setupLighting(shaderProgram);
 		soundOn = false;
+		wall->modelMatrix = translate(mat4(1.0f), vec3(0.0f, -3.0f, -4.0f));
+		wall->update(0);
+		wall->setOrientation(vec3(1,0,0));
 		ufo -> modelMatrix = translate(mat4(1.0f), playerPos);
 	}
 
@@ -267,6 +268,19 @@ public:
 		setViewPoint();
 		
 		ufo -> modelMatrix = translate(mat4(1.0f), playerPos);
+
+		// demo of wall detection
+		if (wall->getOrientation().x == 1) {
+			// check proximity to wall
+			if (abs(wall->getStartPoint().z - ufo->getWorldPosition().z) <= 1.1f) {
+				moveForward = false;
+				moveBack = false;
+				moveLeft = false;
+				moveRight = false;
+				cout << "CRASH\n";
+			}
+		}
+
 		if(view == 2 && moveForward)
 			playerPos += .25f*normalize(vec3(sin(lookAtAngleXZ), 0.0f, -cos(lookAtAngleXZ)));
 		else if(view == 1 && moveForward)
@@ -277,9 +291,8 @@ public:
 			playerPos -= .25f*normalize(vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f)));
 		if(view == 2 && moveRight)
 			playerPos += .25f*normalize(vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f)));
-		VisualObject::update(elapsedTimeSec);
 
-		// demo of wall detection
+		VisualObject::update(elapsedTimeSec);
 
 	} // end update
 
