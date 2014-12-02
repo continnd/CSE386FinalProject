@@ -19,6 +19,11 @@ class Wall : public VisualObject
 		float getHeight () const { return height; }
 		float getWidth () const { return width; }
 
+		void setOrientation(vec3 pOrientation);
+
+		vec3 getStartPoint() const { return startPoint; }
+		vec3 getEndPoint() const { return endPoint; }
+
 	protected:
 	
 		void setShaderValues();
@@ -27,6 +32,13 @@ class Wall : public VisualObject
 		float height, width;
 
 		int indiceCount;
+
+		// Doug's modifications for determining the end points of the wall.
+		vec3 endPoint, startPoint, center;
+		vec3 orientation;
+
+private:
+	void applyOrientation();
 };
 
 #endif // ___WALL_H___

@@ -116,3 +116,19 @@ void Wall::draw()
 	VisualObject::draw();
 
 } // end draw
+
+void Wall::setOrientation(vec3 pOrientation) {
+	orientation = pOrientation;
+	applyOrientation();
+}
+
+void Wall::applyOrientation() {
+	if (orientation.x == 1) {
+		startPoint = vec3(getWorldPosition().x - width / 2, getWorldPosition().y, getWorldPosition().z);
+		endPoint = vec3(getWorldPosition().x + width / 2, getWorldPosition().y, getWorldPosition().z);
+	}
+	else {
+		startPoint = vec3(getWorldPosition().x, getWorldPosition().y, getWorldPosition().z - width / 2);
+		endPoint = vec3(getWorldPosition().x, getWorldPosition().y, getWorldPosition().z + width / 2);
+	}
+}
