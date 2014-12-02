@@ -65,6 +65,7 @@ public:
 		pig = new Pig();
 		ufo = new UFO();
 
+		ufo->addController(new TiltController(&view, &moveForward, &moveBack, &moveLeft, &moveRight, &mouse_x, &mouse_y, &playerPos));
 
 		addChild(floor2);
 		addChild(wall);
@@ -96,7 +97,6 @@ public:
 		wall->modelMatrix = translate(mat4(1.0f), vec3(0.0f, -3.0f, -4.0f));
 		wall->update(0);
 		wall->setOrientation(vec3(1,0,0));
-		ufo->addController(new TiltController(&view, &moveForward, &moveBack, &moveLeft, &moveRight, &mouse_x, &mouse_y, &playerPos));
 	}
 
 	void setupLighting(GLuint shaderProgram) {
@@ -260,6 +260,7 @@ public:
 	// Update scene objects inbetween frames 
 	virtual void update( float elapsedTimeSec ) 
 	{ 
+		VisualObject::update(elapsedTimeSec);
 		float windowWidth = float(glutGet(GLUT_WINDOW_WIDTH)/2);
 		float windowHeight = float(glutGet(GLUT_WINDOW_HEIGHT)/2);
 		glutPassiveMotionFunc(getMousePos);
@@ -284,8 +285,6 @@ public:
 			if(view == 2 && moveRight)
 				playerPos += .25f*normalize(vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f)));
 		}
-		VisualObject::update(elapsedTimeSec);
-
 	} // end update
 
 	bool checkWalls() {
