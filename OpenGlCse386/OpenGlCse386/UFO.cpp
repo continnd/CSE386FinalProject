@@ -15,7 +15,6 @@ UFO::UFO(GLfloat radius)
 	addChild(cockpit);
 }
 
-
 UFO::~UFO() {
 }
 

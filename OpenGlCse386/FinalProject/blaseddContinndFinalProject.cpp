@@ -6,6 +6,7 @@
 #include "SpinnerController.h"
 #include "OrbitController.h"
 #include "WaypointController.h"
+#include "TiltController.h"
 #include "Cylinder.h"
 #include "Cube.h"
 #include "Cone.h"
@@ -64,6 +65,7 @@ public:
 		pig = new Pig();
 		ufo = new UFO();
 
+
 		addChild(floor2);
 		addChild(wall);
 		addChild(pig);
@@ -94,7 +96,7 @@ public:
 		wall->modelMatrix = translate(mat4(1.0f), vec3(0.0f, -3.0f, -4.0f));
 		wall->update(0);
 		wall->setOrientation(vec3(1,0,0));
-		ufo -> modelMatrix = translate(mat4(1.0f), playerPos);
+		ufo->addController(new TiltController(&view, &moveForward, &moveBack, &moveLeft, &moveRight, &mouse_x, &mouse_y, &playerPos));
 	}
 
 	void setupLighting(GLuint shaderProgram) {
@@ -151,24 +153,24 @@ public:
 		case 'w' :
 			moveForward = true;
 			if(view == 2)
-				playerPos += vec3(sin(lookAtAngleXZ), 0.0f, -cos(lookAtAngleXZ));
+				playerPos += .25f*normalize(vec3(sin(lookAtAngleXZ), 0.0f, -cos(lookAtAngleXZ)));
 			else if(view == 1)
-				playerPos += normalize(vec3(mouse_x-glutGet(GLUT_WINDOW_WIDTH)/2, 0.0f, mouse_y-glutGet(GLUT_WINDOW_HEIGHT)/2));
+				playerPos += .25f*normalize(vec3(mouse_x, 0.0f, mouse_y));
 			break;
 		case 's':
 			moveBack = true;
 			if(view == 2)
-				playerPos -= vec3(sin(lookAtAngleXZ), 0.0f, -cos(lookAtAngleXZ));
+				playerPos -= .25f*normalize(vec3(sin(lookAtAngleXZ), 0.0f, -cos(lookAtAngleXZ)));
 			break;
 		case 'a':
 			moveLeft = true;
 			if(view == 2)
-				playerPos -= vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f));
+				playerPos -= .25f*normalize(vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f)));
 			break;
 		case 'd':
 			moveRight = true;
 			if(view == 2)
-				playerPos += vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f));
+				playerPos += .25f*normalize(vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f)));
 			break;
 		case 'j':
 			lightOn = generalLighting.getEnabled( GL_LIGHT_ZERO );
@@ -259,15 +261,14 @@ public:
 		glutPassiveMotionFunc(getMousePos);
 		if(view == 2)
 			glutWarpPointer((int)windowWidth, (int)windowHeight);
-		lookAtAngleXZ += ((mouse_x-windowWidth)/(windowWidth)/2.0f)*M_PI/2.0f;
-		lookAtAngleYZ -= ((mouse_y-windowHeight)/(windowHeight)/2.0f)*M_PI/2.0f;
+		lookAtAngleXZ += ((mouse_x)/(windowWidth)/2.0f)*M_PI/2.0f;
+		lookAtAngleYZ -= ((mouse_y)/(windowHeight)/2.0f)*M_PI/2.0f;
 		if(lookAtAngleYZ > 80.0f * M_PI/180)
 			lookAtAngleYZ = 80.0f * M_PI/180;
 		else if(lookAtAngleYZ < -80.0f * M_PI/180)
 			lookAtAngleYZ = -80.0f * M_PI/180;
 		setViewPoint();
 		
-		ufo -> modelMatrix = translate(mat4(1.0f), playerPos);
 
 		// demo of wall detection
 		if (wall->getOrientation().x == 1) {
@@ -284,7 +285,7 @@ public:
 		if(view == 2 && moveForward)
 			playerPos += .25f*normalize(vec3(sin(lookAtAngleXZ), 0.0f, -cos(lookAtAngleXZ)));
 		else if(view == 1 && moveForward)
-			playerPos += .25f*normalize(vec3(mouse_x-glutGet(GLUT_WINDOW_WIDTH)/2, 0.0f, mouse_y-glutGet(GLUT_WINDOW_HEIGHT)/2));
+			playerPos += .25f*normalize(vec3(mouse_x, 0.0f, mouse_y));
 		if(view == 2 && moveBack)
 			playerPos -= .25f*normalize(vec3(sin(lookAtAngleXZ), 0.0f, -cos(lookAtAngleXZ)));
 		if(view == 2 && moveLeft)
@@ -371,8 +372,8 @@ public:
 	};
 
 	void getMousePos(int x, int y) {
-		mouse_x=x;
-		mouse_y=y;
+		mouse_x=x-glutGet(GLUT_WINDOW_WIDTH)/2;
+		mouse_y=y-glutGet(GLUT_WINDOW_HEIGHT)/2;
 	}
 
 	blaseddContinndFinalProject* labClassPtr;

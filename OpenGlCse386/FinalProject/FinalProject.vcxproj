@@ -89,8 +89,10 @@
   <ItemGroup>
     <ClCompile Include="blaseddContinndFinalProject.cpp" />
     <ClCompile Include="Pig.cpp" />
+    <ClCompile Include="TiltController.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="TiltController.h" />
     <ClInclude Include="Pig.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -6,6 +6,7 @@
 #include "textureCoordinates.h"
 #include "Cone.h"
 #include "Sphere.h"
+#include "Controller.h"
 
 class UFO : public VisualObject
 {

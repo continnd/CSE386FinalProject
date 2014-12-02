@@ -26,9 +26,15 @@
     <ClCompile Include="Pig.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TiltController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Pig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TiltController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
