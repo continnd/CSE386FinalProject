@@ -152,6 +152,7 @@ public:
 			break;
 		case 'w' :
 			moveForward = true;
+			if (checkWalls())
 			if(view == 2)
 				playerPos += .25f*normalize(vec3(sin(lookAtAngleXZ), 0.0f, -cos(lookAtAngleXZ)));
 			else if(view == 1)
@@ -159,16 +160,19 @@ public:
 			break;
 		case 's':
 			moveBack = true;
+			if (checkWalls())
 			if(view == 2)
 				playerPos -= .25f*normalize(vec3(sin(lookAtAngleXZ), 0.0f, -cos(lookAtAngleXZ)));
 			break;
 		case 'a':
 			moveLeft = true;
+			if (checkWalls())
 			if(view == 2)
 				playerPos -= .25f*normalize(vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f)));
 			break;
 		case 'd':
 			moveRight = true;
+			if (checkWalls())
 			if(view == 2)
 				playerPos += .25f*normalize(vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f)));
 			break;
@@ -268,34 +272,35 @@ public:
 		else if(lookAtAngleYZ < -80.0f * M_PI/180)
 			lookAtAngleYZ = -80.0f * M_PI/180;
 		setViewPoint();
-		
-
-		// demo of wall detection
-		if (wall->getOrientation().x == 1) {
-			// check proximity to wall
-			if (abs(wall->getStartPoint().z - ufo->getWorldPosition().z) <= 1.1f) {
-				moveForward = false;
-				moveBack = false;
-				moveLeft = false;
-				moveRight = false;
-				cout << "CRASH\n";
-			}
+		if (checkWalls()) {
+			if(view == 2 && moveForward)
+				playerPos += .25f*normalize(vec3(sin(lookAtAngleXZ), 0.0f, -cos(lookAtAngleXZ)));
+			else if(view == 1 && moveForward)
+				playerPos += .25f*normalize(vec3(mouse_x, 0.0f, mouse_y));
+			if(view == 2 && moveBack)
+				playerPos -= .25f*normalize(vec3(sin(lookAtAngleXZ), 0.0f, -cos(lookAtAngleXZ)));
+			if(view == 2 && moveLeft)
+				playerPos -= .25f*normalize(vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f)));
+			if(view == 2 && moveRight)
+				playerPos += .25f*normalize(vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f)));
 		}
-
-		if(view == 2 && moveForward)
-			playerPos += .25f*normalize(vec3(sin(lookAtAngleXZ), 0.0f, -cos(lookAtAngleXZ)));
-		else if(view == 1 && moveForward)
-			playerPos += .25f*normalize(vec3(mouse_x, 0.0f, mouse_y));
-		if(view == 2 && moveBack)
-			playerPos -= .25f*normalize(vec3(sin(lookAtAngleXZ), 0.0f, -cos(lookAtAngleXZ)));
-		if(view == 2 && moveLeft)
-			playerPos -= .25f*normalize(vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f)));
-		if(view == 2 && moveRight)
-			playerPos += .25f*normalize(vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f)));
-
 		VisualObject::update(elapsedTimeSec);
 
 	} // end update
+
+	bool checkWalls() {
+		// demo of wall detection
+		if (wall->getOrientation().x == 1) {
+			if (ufo->getWorldPosition().x > wall->getStartPoint().x &&
+				ufo->getWorldPosition().x < wall->getEndPoint().x)
+				// check proximity to wall
+				if (abs(wall->getStartPoint().z - ufo->getWorldPosition().z) <= 1.1f) {
+					// This needs to be smarter... for now I'm just turning off all ability to move.
+					return false;
+				}
+		}
+		return true;
+	}
 
 	virtual void setViewPoint() 
 	{
@@ -357,67 +362,67 @@ public:
 		lastViewPosition = viewPosition;
 	} // end listenerUpdate
 
-	protected:
-		GLuint createViewMenu()
-		{
-			GLuint menuId = glutCreateMenu(viewMenu);
-			// Specify menu items and their integer identifiers
-			glutAddMenuEntry("Default", 0);
-			glutAddMenuEntry("View 1", 1);
-			glutAddMenuEntry("View 2", 2);
+protected:
+	GLuint createViewMenu()
+	{
+		GLuint menuId = glutCreateMenu(viewMenu);
+		// Specify menu items and their integer identifiers
+		glutAddMenuEntry("Default", 0);
+		glutAddMenuEntry("View 1", 1);
+		glutAddMenuEntry("View 2", 2);
 
-			return menuId;
-		}
-
-	};
-
-	void getMousePos(int x, int y) {
-		mouse_x=x-glutGet(GLUT_WINDOW_WIDTH)/2;
-		mouse_y=y-glutGet(GLUT_WINDOW_HEIGHT)/2;
+		return menuId;
 	}
 
-	blaseddContinndFinalProject* labClassPtr;
-	int main(int argc, char** argv) 
-	{
-		GLUTBaseInit(argc, argv);
-		GLUTBaseCreateWindow( "CSE 386 Lab 10" );
+};
 
-		blaseddContinndFinalProject pApp;
+void getMousePos(int x, int y) {
+	mouse_x=x-glutGet(GLUT_WINDOW_WIDTH)/2;
+	mouse_y=y-glutGet(GLUT_WINDOW_HEIGHT)/2;
+}
 
-		labClassPtr = &pApp;
-		GLUTBaseRunApplication(&pApp);
+blaseddContinndFinalProject* labClassPtr;
+int main(int argc, char** argv) 
+{
+	GLUTBaseInit(argc, argv);
+	GLUTBaseCreateWindow( "CSE 386 Lab 10" );
 
+	blaseddContinndFinalProject pApp;
+
+	labClassPtr = &pApp;
+	GLUTBaseRunApplication(&pApp);
+
+}
+
+void viewMenu (int value)
+{
+	labClassPtr-> view = value;
+	cout << "View point " << value << endl;
+	if(labClassPtr -> view == 2)
+		glutSetCursor(GLUT_CURSOR_NONE);
+	else {
+		glutSetCursor(GLUT_CURSOR_LEFT_ARROW);
 	}
+} // end viewMenu
 
-	void viewMenu (int value)
-	{
-		labClassPtr-> view = value;
-		cout << "View point " << value << endl;
-		if(labClassPtr -> view == 2)
-			glutSetCursor(GLUT_CURSOR_NONE);
-		else {
-			glutSetCursor(GLUT_CURSOR_LEFT_ARROW);
-		}
-	} // end viewMenu
-
-	void SpecialKeyboardCB(int Key, int x, int y)
-	{
-		GLfloat rotationValue = 0.5f;
-		switch (Key) {
-		case GLUT_KEY_RIGHT:
-			labClassPtr->rotationY +=rotationValue;
-			break;
-		case GLUT_KEY_LEFT:
-			labClassPtr->rotationY -=rotationValue;
-			break;
-		case GLUT_KEY_UP:
-			labClassPtr->rotationX += rotationValue;
-			break;
-		case GLUT_KEY_DOWN:
-			labClassPtr->rotationX -= rotationValue;
-			break;
-		default:
-			break;
-		}
-		cout << "key with ascii code " << x << " pressed." << endl;
+void SpecialKeyboardCB(int Key, int x, int y)
+{
+	GLfloat rotationValue = 0.5f;
+	switch (Key) {
+	case GLUT_KEY_RIGHT:
+		labClassPtr->rotationY +=rotationValue;
+		break;
+	case GLUT_KEY_LEFT:
+		labClassPtr->rotationY -=rotationValue;
+		break;
+	case GLUT_KEY_UP:
+		labClassPtr->rotationX += rotationValue;
+		break;
+	case GLUT_KEY_DOWN:
+		labClassPtr->rotationX -= rotationValue;
+		break;
+	default:
+		break;
 	}
+	cout << "key with ascii code " << x << " pressed." << endl;
+}
