@@ -102,7 +102,7 @@ public:
 		//Build the maze
 		makeWalls(vec3(-45, 0, 0), 40, X);
 		makeWalls(vec3(5, 0, 0), 40, X);
-		makeWalls(vec3(-45, 0, 0), 90, Z);
+		makeWalls(vec3(-45, 0, -90), 90, Z);
 	}
 
 	void makeWalls(vec3 startLocation, int length, int orientation) {
