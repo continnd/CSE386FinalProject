@@ -55,9 +55,9 @@ public:
 		lookAtAngleYZ = 0.0;
 		lookAtAngleXZ = 0.0;
 		playerPos = vec3(0.0f, 0.0f, 12.0f);
-		floor = new Wall();
+		floor = new Wall(100,100);
 		floor->material.setTextureMapped(true);
-		floor->material.setupTexture("stone.bmp");
+		floor->material.setupTexture("brick.bmp");
 
 		//sound = new SoundSource("Footsteps.wav"); 
 		//sound->setLooping(true); 
@@ -108,7 +108,18 @@ public:
 		wall->setOrientation(vec3(1,0,0));
 		
 		walls.push_back(wall);
-		addChild(walls.at(0));
+		addChild(wall);
+		//Back side of wall...
+		wall = new Wall();
+		wall->material.setTextureMapped(true);
+		wall->material.setupTexture("stone.bmp");
+		wall->setShader(shaderProgram);
+		wall->modelMatrix = translate(mat4(1.0f), vec3(0.0f, -3.0f, -4.0f)) * rotate(mat4(1.0f), 180.f, vec3(0,1,0));;
+		wall->update(0);
+		wall->setOrientation(vec3(1,0,0));
+		
+		walls.push_back(wall);
+		addChild(wall);
 	}
 
 	void setupLighting(GLuint shaderProgram) {
