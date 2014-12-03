@@ -4,12 +4,14 @@ Mazes!
 Fancy lighting!
 
 
+
 TODO:
+
 Add fog
 
 Adjust lights away from default setup
 
-Fix wall collision for walls in z direction
+Fix wall collision for walls in z direction and for view 2 movement equation.
 
 Detect pigs arriving at UFO (end game)
 
