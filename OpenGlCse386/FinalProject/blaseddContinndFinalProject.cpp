@@ -175,7 +175,7 @@ public:
 			break;
 		case 'w' :
 			moveForward = true;
-			if (checkWalls())
+			if (checkWalls()==0)
 				if(view == 2)
 					playerPos += .25f*normalize(vec3(sin(lookAtAngleXZ), 0.0f, -cos(lookAtAngleXZ)));
 				else if(view == 1)
@@ -183,19 +183,19 @@ public:
 			break;
 		case 's':
 			moveBack = true;
-			if (checkWalls())
+			if (checkWalls()==0)
 				if(view == 2)
 					playerPos -= .25f*normalize(vec3(sin(lookAtAngleXZ), 0.0f, -cos(lookAtAngleXZ)));
 			break;
 		case 'a':
 			moveLeft = true;
-			if (checkWalls())
+			if (checkWalls()==0)
 				if(view == 2)
 					playerPos -= .25f*normalize(vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f)));
 			break;
 		case 'd':
 			moveRight = true;
-			if (checkWalls())
+			if (checkWalls()==0)
 				if(view == 2)
 					playerPos += .25f*normalize(vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f)));
 			break;
@@ -314,7 +314,7 @@ public:
 			if(view == 2 && moveRight)
 				playerPos += .25f*normalize(vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f)));
 			break;
-		case 2:
+		case 1:
 			if(view == 2 && moveForward)
 				playerPos += .25f*normalize(vec3(sin(lookAtAngleXZ), 0.0f, 0.0f));
 			else if(view == 1 && moveForward)
@@ -326,7 +326,7 @@ public:
 			if(view == 2 && moveRight)
 				playerPos += .25f*normalize(vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, 0.0f));
 			break;
-		case 1:
+		case 2:
 			if(view == 2 && moveForward)
 				playerPos += .25f*normalize(vec3(0.0f, 0.0f, -cos(lookAtAngleXZ)));
 			else if(view == 1 && moveForward)
@@ -363,7 +363,7 @@ public:
 						}
 					}
 			}
-			// Coming from edge of wall...is this even likely to happen?
+			// Coming from edge of wall
 			else if (wall->getStartPoint().x - ufo->getWorldPosition().x <= 1.1f ||
 				ufo->getWorldPosition().x - wall->getEndPoint().x <= 1.1f ) {
 					// -x side of wall
