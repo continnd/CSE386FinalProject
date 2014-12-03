@@ -18,6 +18,8 @@
 #include "UFO.h"
 
 #define M_PI 3.1415926535897932384626433832795f
+#define X 1
+#define Z 2
 
 using namespace glm;
 int mouse_x, mouse_y;
@@ -55,7 +57,7 @@ public:
 		lookAtAngleYZ = 0.0;
 		lookAtAngleXZ = 0.0;
 		playerPos = vec3(0.0f, 0.0f, 12.0f);
-		floor = new Wall(100,100);
+		floor = new Wall(90,90);
 		floor->material.setTextureMapped(true);
 		floor->material.setupTexture("brick.bmp");
 
@@ -93,30 +95,43 @@ public:
 		pig->setTextureMapped(true);
 		pig->setTexture("metal.bmp");
 		setupLighting(shaderProgram);
-		makeWalls();		
+			
 		ufo->update(0);
 		soundOn = false;
+
+		//Build the maze
+		makeWalls(vec3(-45, 0, 0), 40, X);
+		makeWalls(vec3(5, 0, 0), 40, X);
+		makeWalls(vec3(-45, 0, 0), 90, Z);
 	}
 
-	void makeWalls() {
-		Wall *wall = new Wall();
+	void makeWalls(vec3 startLocation, int length, int orientation) {
+		Wall *wall = new Wall(6.0f, length);
 		wall->material.setTextureMapped(true);
 		wall->material.setupTexture("stone.bmp");
 		wall->setShader(shaderProgram);
-		wall->modelMatrix = translate(mat4(1.0f), vec3(0.0f, -3.0f, -4.0f));
+		vec3 midPoint = startLocation + (orientation == X ? vec3(length/2, -3.f, 0.f) :
+			vec3(0.f, -3.f, length/2));
+		if (orientation == Z) {
+			wall->modelMatrix = translate(mat4(1.0f), midPoint) * rotate(mat4(1.0f), 90.f, vec3(0,1,0));
+		}
+		else wall->modelMatrix = translate(mat4(1.0f), midPoint);
 		wall->update(0);
-		wall->setOrientation(vec3(1,0,0));
+		wall->setOrientation(orientation == X ? vec3(1,0,0) : vec3(0,0,1));
 
 		walls.push_back(wall);
 		addChild(wall);
 		//Back side of wall...
-		wall = new Wall();
+		wall = new Wall(6.0f, length);
 		wall->material.setTextureMapped(true);
 		wall->material.setupTexture("stone.bmp");
 		wall->setShader(shaderProgram);
-		wall->modelMatrix = translate(mat4(1.0f), vec3(0.0f, -3.0f, -4.0f)) * rotate(mat4(1.0f), 180.f, vec3(0,1,0));;
+		if (orientation == Z) {
+			wall->modelMatrix = translate(mat4(1.0f), midPoint) * rotate(mat4(1.0f), 270.f, vec3(0,1,0));
+		}
+		else wall->modelMatrix = translate(mat4(1.0f), midPoint) * rotate(mat4(1.0f), 180.f, vec3(0,1,0));;
 		wall->update(0);
-		wall->setOrientation(vec3(1,0,0));
+		wall->setOrientation(orientation == X ? vec3(1,0,0) : vec3(0,0,1));
 
 		walls.push_back(wall);
 		addChild(wall);
