@@ -33,6 +33,11 @@ void UFO::setShader(GLuint shaderProgram) {
 	cockpit->material.setAmbientAndDiffuseMat(vec4(0.5f,0.0f,0.0f,0.5f));
 	cockpit->material.setEmissiveMat(vec4(0.5f,0.0f,0.0f,1.0f));
 	cockpit->material.setSpecularMat(vec4(0.5f, 0.0f,0.0f,1.0f));
+	top->material.setTextureMapped(true);
+	bottom->material.setTextureMapped(true);
+	cockpit->material.setTextureMapped(true);
+	top->material.setupTexture("steel.bmp");
+	bottom->material.setupTexture("steel.bmp");
 }
 
 void UFO::draw() {
