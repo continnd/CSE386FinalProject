@@ -263,7 +263,11 @@ public:
 	{ 
 		vec3 pigFacing = playerPos - pig->getWorldPosition();
 		GLfloat pigRot = atan(pigFacing.x/(pigFacing.z))*180/M_PI;
-		pig->modelMatrix = rotate(mat4(1.0f), pigRot, vec3(0.0f, 1.0f, 0.0f)) * translate(mat4(1.0f), pig->getWorldPosition() + vec3(0.0f, 0.0f, 0.15f));
+		if(pigFacing.z < 0)
+			pigRot += 180;
+		pig->modelMatrix = translate(mat4(1.0f), pig->getWorldPosition()) *
+						   rotate(mat4(1.0f), pigRot, vec3(0.0f, 1.0f, 0.0f)) * translate(mat4(1.0f),
+								  vec3(0.0f, 0.0f, 0.05f));
 		float windowWidth = float(glutGet(GLUT_WINDOW_WIDTH)/2);
 		float windowHeight = float(glutGet(GLUT_WINDOW_HEIGHT)/2);
 		glutPassiveMotionFunc(getMousePos);
@@ -276,7 +280,9 @@ public:
 		else if(lookAtAngleYZ < -80.0f * M_PI/180)
 			lookAtAngleYZ = -80.0f * M_PI/180;
 		setViewPoint();
-		if (checkWalls()) {
+		int collisionType = checkWalls();
+		switch (collisionType) { 
+		case 0:
 			if(view == 2 && moveForward)
 				playerPos += .25f*normalize(vec3(sin(lookAtAngleXZ), 0.0f, -cos(lookAtAngleXZ)));
 			else if(view == 1 && moveForward)
@@ -287,27 +293,52 @@ public:
 				playerPos -= .25f*normalize(vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f)));
 			if(view == 2 && moveRight)
 				playerPos += .25f*normalize(vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f)));
+			break;
+		case 2:
+			if(view == 2 && moveForward)
+				playerPos += .25f*normalize(vec3(sin(lookAtAngleXZ), 0.0f, 0.0f));
+			else if(view == 1 && moveForward)
+				playerPos += .25f*normalize(vec3(mouse_x, 0.0f, 4.0f));
+			if(view == 2 && moveBack)
+				playerPos -= .25f*normalize(vec3(sin(lookAtAngleXZ), 0.0f, 0.0f));
+			if(view == 2 && moveLeft)
+				playerPos -= .25f*normalize(vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, 0.0f));
+			if(view == 2 && moveRight)
+				playerPos += .25f*normalize(vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, 0.0f));
+			break;
+		case 1:
+			if(view == 2 && moveForward)
+				playerPos += .25f*normalize(vec3(0.0f, 0.0f, -cos(lookAtAngleXZ)));
+			else if(view == 1 && moveForward)
+				playerPos += .25f*normalize(vec3(0.0f, 0.0f, mouse_y));
+			if(view == 2 && moveBack)
+				playerPos -= .25f*normalize(vec3(0.0f, 0.0f, -cos(lookAtAngleXZ)));
+			if(view == 2 && moveLeft)
+				playerPos -= .25f*normalize(vec3(0.0f, 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f)));
+			if(view == 2 && moveRight)
+				playerPos += .25f*normalize(vec3(0.0f, 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f)));
+			break;
 		}
 		VisualObject::update(elapsedTimeSec);
 	} // end update
 
-	bool checkWalls() {
+	int checkWalls() {
 		// demo of wall detection... should be easy to make this work on a vector of walls.
 		if (wall->getOrientation().x == 1) {
 			// Facing wall head-on
-			if (ufo->getWorldPosition().x > wall->getStartPoint().x &&
-				ufo->getWorldPosition().x < wall->getEndPoint().x) {
+			if (playerPos.x > wall->getStartPoint().x &&
+				playerPos.x < wall->getEndPoint().x) {
 				// check proximity to wall
 				if (abs(wall->getStartPoint().z - ufo->getWorldPosition().z) <= 1.1f) {
 					// Coming from front of wall.
 					if (playerPos.z > wall->getStartPoint().z && 
-						(playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).z < wall->getStartPoint().z) {
-						return false;
+						(playerPos + .25f * normalize(vec3(mouse_x, 0.0f, mouse_y))).z < wall->getStartPoint().z) {
+						return 1;
 					}
 					// Coming from behind wall
 					if (playerPos.z < wall->getStartPoint().z &&
 						(playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).z > wall->getStartPoint().z) {
-						return false;
+						return 1;
 					}
 				}
 			}
@@ -317,31 +348,30 @@ public:
 					 // -x side of wall
 					 if ( (playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).z == wall->getStartPoint().z &&
 						 (playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).x > wall->getStartPoint().x) {
-							return false;
+							return 1;
 					 }
 					 if ( (playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).z == wall->getStartPoint().z &&
 						 (playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).x < wall->getEndPoint().x) {
-							return false;
+							return 1;
 					 }
 			}
 		}
 
-
 		if (wall->getOrientation().z == 1) {
 			// Facing wall head-on
-			if (ufo->getWorldPosition().z > wall->getStartPoint().z &&
-				ufo->getWorldPosition().z < wall->getEndPoint().z) {
+			if (playerPos.z > wall->getStartPoint().z &&
+				playerPos.z < wall->getEndPoint().z) {
 				// check proximity to wall
 				if (abs(wall->getStartPoint().x - ufo->getWorldPosition().x) <= 1.1f) {
 					// Coming from front of wall.
 					if (playerPos.x > wall->getStartPoint().x && 
 						(playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).x < wall->getStartPoint().x) {
-						return false;
+						return 2;
 					}
 					// Coming from behind wall
 					if (playerPos.x < wall->getStartPoint().x &&
 						(playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).x > wall->getStartPoint().x) {
-						return false;
+						return 2;
 					}
 				}
 			}
@@ -351,15 +381,15 @@ public:
 					 // -x side of wall
 					 if ( (playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).x == wall->getStartPoint().x &&
 						 (playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).z > wall->getStartPoint().z) {
-							return false;
+							return 2;
 					 }
 					 if ( (playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).x == wall->getStartPoint().x &&
 						 (playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).z < wall->getEndPoint().z) {
-							return false;
+							return 2;
 					 }
 			}
 		}
-		return true;
+		return 0;
 	}
 
 	virtual void setViewPoint() 
@@ -413,7 +443,8 @@ public:
 		// Set the listener postion 
 		alListener3f(AL_POSITION, viewPosition.x, viewPosition.y, viewPosition.z );
 		// Set the listener orientation 
-		float orientation[] = { viewDirection.x, viewDirection.y, viewDirection.z, viewUp.x, viewUp.y, viewUp.z }; alListenerfv(AL_ORIENTATION, orientation );
+		float orientation[] = { viewDirection.x, viewDirection.y, viewDirection.z,
+			viewUp.x, viewUp.y, viewUp.z }; alListenerfv(AL_ORIENTATION, orientation );
 		// Set listener velocity 
 		if (elapsedTimeSec > 0) {
 			vec3 speed = (viewPosition - lastViewPosition)/elapsedTimeSec;
