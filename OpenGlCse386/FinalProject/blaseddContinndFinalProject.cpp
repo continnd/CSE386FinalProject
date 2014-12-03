@@ -106,7 +106,7 @@ public:
 		wall->modelMatrix = translate(mat4(1.0f), vec3(0.0f, -3.0f, -4.0f));
 		wall->update(0);
 		wall->setOrientation(vec3(1,0,0));
-		
+
 		walls.push_back(wall);
 		addChild(wall);
 		//Back side of wall...
@@ -117,7 +117,7 @@ public:
 		wall->modelMatrix = translate(mat4(1.0f), vec3(0.0f, -3.0f, -4.0f)) * rotate(mat4(1.0f), 180.f, vec3(0,1,0));;
 		wall->update(0);
 		wall->setOrientation(vec3(1,0,0));
-		
+
 		walls.push_back(wall);
 		addChild(wall);
 	}
@@ -175,7 +175,7 @@ public:
 			break;
 		case 'w' :
 			moveForward = true;
-			if (checkWalls())
+			if (checkWalls()==0)
 				if(view == 2)
 					playerPos += .25f*normalize(vec3(sin(lookAtAngleXZ), 0.0f, -cos(lookAtAngleXZ)));
 				else if(view == 1)
@@ -183,19 +183,19 @@ public:
 			break;
 		case 's':
 			moveBack = true;
-			if (checkWalls())
+			if (checkWalls()==0)
 				if(view == 2)
 					playerPos -= .25f*normalize(vec3(sin(lookAtAngleXZ), 0.0f, -cos(lookAtAngleXZ)));
 			break;
 		case 'a':
 			moveLeft = true;
-			if (checkWalls())
+			if (checkWalls()==0)
 				if(view == 2)
 					playerPos -= .25f*normalize(vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f)));
 			break;
 		case 'd':
 			moveRight = true;
-			if (checkWalls())
+			if (checkWalls()==0)
 				if(view == 2)
 					playerPos += .25f*normalize(vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f)));
 			break;
@@ -286,8 +286,8 @@ public:
 		if(pigFacing.z < 0)
 			pigRot += 180;
 		pig->modelMatrix = translate(mat4(1.0f), pig->getWorldPosition()) *
-						   rotate(mat4(1.0f), pigRot, vec3(0.0f, 1.0f, 0.0f)) * translate(mat4(1.0f),
-								  vec3(0.0f, 0.0f, 0.05f));
+			rotate(mat4(1.0f), pigRot, vec3(0.0f, 1.0f, 0.0f)) * translate(mat4(1.0f),
+			vec3(0.0f, 0.0f, 0.05f));
 		float windowWidth = float(glutGet(GLUT_WINDOW_WIDTH)/2);
 		float windowHeight = float(glutGet(GLUT_WINDOW_HEIGHT)/2);
 		glutPassiveMotionFunc(getMousePos);
@@ -314,11 +314,11 @@ public:
 			if(view == 2 && moveRight)
 				playerPos += .25f*normalize(vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f)));
 			break;
-		case 2:
+		case 1:
 			if(view == 2 && moveForward)
 				playerPos += .25f*normalize(vec3(sin(lookAtAngleXZ), 0.0f, 0.0f));
 			else if(view == 1 && moveForward)
-				playerPos += .25f*normalize(vec3(mouse_x, 0.0f, 4.0f));
+				playerPos += .25f*normalize(vec3(mouse_x, 0.0f, 0.0f));
 			if(view == 2 && moveBack)
 				playerPos -= .25f*normalize(vec3(sin(lookAtAngleXZ), 0.0f, 0.0f));
 			if(view == 2 && moveLeft)
@@ -326,7 +326,7 @@ public:
 			if(view == 2 && moveRight)
 				playerPos += .25f*normalize(vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, 0.0f));
 			break;
-		case 1:
+		case 2:
 			if(view == 2 && moveForward)
 				playerPos += .25f*normalize(vec3(0.0f, 0.0f, -cos(lookAtAngleXZ)));
 			else if(view == 1 && moveForward)
@@ -344,70 +344,72 @@ public:
 
 	int checkWalls() {
 		// demo of wall detection... should be easy to make this work on a vector of walls.
-		Wall* wall = walls[0];
-		if (wall->getOrientation().x == 1) {
-			// Facing wall head-on
-			if (playerPos.x > wall->getStartPoint().x &&
-				playerPos.x < wall->getEndPoint().x) {
-					// check proximity to wall
-					if (abs(wall->getStartPoint().z - ufo->getWorldPosition().z) <= 1.1f) {
-						// Coming from front of wall.
-						if (playerPos.z > wall->getStartPoint().z && 
-							(playerPos + .25f * normalize(vec3(mouse_x, 0.0f, mouse_y))).z < wall->getStartPoint().z) {
-								return 1;
+		for (int i = 0; i < walls.size(); i +=2) {
+			Wall* wall = walls[i];
+			if (wall->getOrientation().x == 1) {
+				// Facing wall head-on
+				if (playerPos.x > wall->getStartPoint().x &&
+					playerPos.x < wall->getEndPoint().x) {
+						// check proximity to wall
+						if (abs(wall->getStartPoint().z - ufo->getWorldPosition().z) <= 1.1f) {
+							// Coming from front of wall.
+							if (playerPos.z > wall->getStartPoint().z && 
+								(playerPos + .25f * normalize(vec3(mouse_x, 0.0f, mouse_y))).z < wall->getStartPoint().z) {
+									return 1;
+							}
+							// Coming from behind wall
+							if (playerPos.z < wall->getStartPoint().z &&
+								(playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).z > wall->getStartPoint().z) {
+									return 1;
+							}
 						}
-						// Coming from behind wall
-						if (playerPos.z < wall->getStartPoint().z &&
-							(playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).z > wall->getStartPoint().z) {
-								return 1;
-						}
-					}
-			}
-			// Coming from edge of wall...is this even likely to happen?
-			else if (wall->getStartPoint().x - ufo->getWorldPosition().x <= 1.1f ||
-				ufo->getWorldPosition().x - wall->getEndPoint().x <= 1.1f ) {
-					// -x side of wall
-					if ( (playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).z == wall->getStartPoint().z &&
-						(playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).x > wall->getStartPoint().x) {
-							return 1;
-					}
-					if ( (playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).z == wall->getStartPoint().z &&
-						(playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).x < wall->getEndPoint().x) {
-							return 1;
-					}
-			}
-		}
-
-		if (wall->getOrientation().z == 1) {
-			// Facing wall head-on
-			if (playerPos.z > wall->getStartPoint().z &&
-				playerPos.z < wall->getEndPoint().z) {
-					// check proximity to wall
-					if (abs(wall->getStartPoint().x - ufo->getWorldPosition().x) <= 1.1f) {
-						// Coming from front of wall.
-						if (playerPos.x > wall->getStartPoint().x && 
-							(playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).x < wall->getStartPoint().x) {
-								return 2;
-						}
-						// Coming from behind wall
-						if (playerPos.x < wall->getStartPoint().x &&
+				}
+				// Coming from edge of wall
+				else if (wall->getStartPoint().x - ufo->getWorldPosition().x <= 1.1f ||
+					ufo->getWorldPosition().x - wall->getEndPoint().x <= 1.1f ) {
+						// -x side of wall
+						if ( (playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).z == wall->getStartPoint().z &&
 							(playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).x > wall->getStartPoint().x) {
+								return 1;
+						}
+						if ( (playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).z == wall->getStartPoint().z &&
+							(playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).x < wall->getEndPoint().x) {
+								return 1;
+						}
+				}
+			}
+
+			if (wall->getOrientation().z == 1) {
+				// Facing wall head-on
+				if (playerPos.z > wall->getStartPoint().z &&
+					playerPos.z < wall->getEndPoint().z) {
+						// check proximity to wall
+						if (abs(wall->getStartPoint().x - ufo->getWorldPosition().x) <= 1.1f) {
+							// Coming from front of wall.
+							if (playerPos.x > wall->getStartPoint().x && 
+								(playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).x < wall->getStartPoint().x) {
+									return 2;
+							}
+							// Coming from behind wall
+							if (playerPos.x < wall->getStartPoint().x &&
+								(playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).x > wall->getStartPoint().x) {
+									return 2;
+							}
+						}
+				}
+				// Coming from edge of wall...is this even likely to happen?
+				else if (wall->getStartPoint().z - ufo->getWorldPosition().z <= 1.1f ||
+					ufo->getWorldPosition().z - wall->getEndPoint().z <= 1.1f ) {
+						// -x side of wall
+						if ( (playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).x == wall->getStartPoint().x &&
+							(playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).z > wall->getStartPoint().z) {
 								return 2;
 						}
-					}
-			}
-			// Coming from edge of wall...is this even likely to happen?
-			else if (wall->getStartPoint().z - ufo->getWorldPosition().z <= 1.1f ||
-				ufo->getWorldPosition().z - wall->getEndPoint().z <= 1.1f ) {
-					// -x side of wall
-					if ( (playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).x == wall->getStartPoint().x &&
-						(playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).z > wall->getStartPoint().z) {
-							return 2;
-					}
-					if ( (playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).x == wall->getStartPoint().x &&
-						(playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).z < wall->getEndPoint().z) {
-							return 2;
-					}
+						if ( (playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).x == wall->getStartPoint().x &&
+							(playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).z < wall->getEndPoint().z) {
+								return 2;
+						}
+				}
 			}
 		}
 		return 0;
