@@ -51,9 +51,9 @@ void Wall::initialize()
 	vec3 v3 = vec3( -width/2, height, 0.0f); 
 
 	vec2 t0 = vec2(0.0f, 0.0f);
-	vec2 t1 = vec2(2.0f, 0.0f);
-	vec2 t2 = vec2(2.0f, 2.0f);
-	vec2 t3 = vec2(0.0f, 2.0f);
+	vec2 t1 = vec2(1.0f, 0.0f);
+	vec2 t2 = vec2(1.0f, 1.0f);
+	vec2 t3 = vec2(0.0f, 1.0f);
 
 	v.push_back( pntVertexData( v0, n, t0) ); // 0
 	v.push_back( pntVertexData( v1, n, t1) ); // 1

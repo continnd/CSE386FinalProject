@@ -30,7 +30,6 @@ public:
 	friend void viewMenu(int value);
 	friend void SpecialKeyboardCB(int Key, int x, int y);
 	friend void getMousePos(int x, int y);
-	Floor2* floor2;
 	Wall* floor;
 	Pig* pig;
 	UFO* ufo;
@@ -45,6 +44,7 @@ public:
 	bool moveRight;
 	vec3 direction;
 	vector<Wall*>walls;
+	GLuint shaderProgram;
 	blaseddContinndFinalProject() : view(0), rotationX(0.0f), rotationY(0.0f), zTrans(-12.0f)
 	{
 		moveForward = false;
@@ -80,10 +80,11 @@ public:
 			{ GL_NONE, NULL } // signals that there are no more shaders 
 		};
 		// Read the files and create the OpenGL shader program. 
-		GLuint shaderProgram = BuildShaderProgram(shaders);
+		shaderProgram = BuildShaderProgram(shaders);
 		projectionAndViewing.setUniformBlockForShader(shaderProgram);
 		generalLighting.setUniformBlockForShader(shaderProgram);
 		floor->setShader(shaderProgram);
+		floor->modelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -3.0f, 0.0f)) * rotate(mat4(1.0f), 90.f, vec3(-1,0,0));
 		ufo->setShader(shaderProgram);
 		pig->setShader(shaderProgram);
 		pig->setAmbientAndDiffuseMat(vec4(0.f, 0.0f, 0.0f, 1.f));
@@ -99,12 +100,15 @@ public:
 
 	void makeWalls() {
 		Wall *wall = new Wall();
+		wall->material.setTextureMapped(true);
+		wall->material.setupTexture("stone.bmp");
 		wall->setShader(shaderProgram);
 		wall->modelMatrix = translate(mat4(1.0f), vec3(0.0f, -3.0f, -4.0f));
 		wall->update(0);
 		wall->setOrientation(vec3(1,0,0));
-		addChild(wall);
+		
 		walls.push_back(wall);
+		addChild(walls.at(0));
 	}
 
 	void setupLighting(GLuint shaderProgram) {
@@ -259,8 +263,6 @@ public:
 		glCullFace(GL_BACK);
 		glEnable(GL_CULL_FACE);
 		setupMenus();
-		floor2->initialize();
-		floor2->modelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -3.0f, 0.0f));
 		VisualObject::initialize();
 		glutSpecialFunc(SpecialKeyboardCB);
 	} // end initialize
