@@ -65,7 +65,7 @@ public:
 		pig = new Pig();
 		ufo = new UFO();
 
-		ufo->addController(new TiltController(&view, &moveForward, &moveBack, &moveLeft, &moveRight, &mouse_x, &mouse_y, &playerPos));
+		ufo->addController(new TiltController(&view, &moveForward, &mouse_x, &mouse_y, &playerPos));
 
 		addChild(floor2);
 		addChild(wall);
@@ -94,6 +94,7 @@ public:
 		pig->setTexture("metal.bmp");
 		setupLighting(shaderProgram);
 		soundOn = false;
+		ufo->update(0);
 		wall->modelMatrix = translate(mat4(1.0f), vec3(0.0f, -3.0f, -4.0f));
 		wall->update(0);
 		wall->setOrientation(vec3(1,0,0));
@@ -260,7 +261,9 @@ public:
 	// Update scene objects inbetween frames 
 	virtual void update( float elapsedTimeSec ) 
 	{ 
-		VisualObject::update(elapsedTimeSec);
+		vec3 pigFacing = playerPos - pig->getWorldPosition();
+		GLfloat pigRot = atan(pigFacing.x/(pigFacing.z))*180/M_PI;
+		pig->modelMatrix = rotate(mat4(1.0f), pigRot, vec3(0.0f, 1.0f, 0.0f)) * translate(mat4(1.0f), pig->getWorldPosition() + vec3(0.0f, 0.0f, 0.15f));
 		float windowWidth = float(glutGet(GLUT_WINDOW_WIDTH)/2);
 		float windowHeight = float(glutGet(GLUT_WINDOW_HEIGHT)/2);
 		glutPassiveMotionFunc(getMousePos);
@@ -285,6 +288,7 @@ public:
 			if(view == 2 && moveRight)
 				playerPos += .25f*normalize(vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f)));
 		}
+		VisualObject::update(elapsedTimeSec);
 	} // end update
 
 	bool checkWalls() {
