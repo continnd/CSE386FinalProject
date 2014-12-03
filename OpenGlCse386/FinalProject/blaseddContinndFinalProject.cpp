@@ -100,9 +100,9 @@ public:
 		soundOn = false;
 
 		//Build the maze
-		makeWalls(vec3(-45, 0, 0), 40, X);
+		makeWalls(vec3(-45.1, 0, 0), 40.1, X);
 		makeWalls(vec3(5, 0, 0), 40, X);
-		makeWalls(vec3(-45, 0, -90), 90, Z);
+		makeWalls(vec3(-45, 0, -90), 90.1, Z);
 	}
 
 	void makeWalls(vec3 startLocation, int length, int orientation) {
@@ -359,7 +359,11 @@ public:
 
 	int checkWalls() {
 		// demo of wall detection... should be easy to make this work on a vector of walls.
+		int retValue = 0;
 		for (int i = 0; i < walls.size(); i +=2) {
+			if (retValue == 3) {
+				return retValue;
+			}
 			Wall* wall = walls[i];
 			if (wall->getOrientation().x == 1) {
 				// Facing wall head-on
@@ -370,12 +374,12 @@ public:
 							// Coming from front of wall.
 							if (playerPos.z > wall->getStartPoint().z && 
 								(playerPos + .25f * normalize(vec3(mouse_x, 0.0f, mouse_y))).z < wall->getStartPoint().z) {
-									return 1;
+									retValue = retValue == 0 ? 1 : 3;
 							}
 							// Coming from behind wall
 							if (playerPos.z < wall->getStartPoint().z &&
 								(playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).z > wall->getStartPoint().z) {
-									return 1;
+									retValue = retValue == 0 ? 1 : 3;
 							}
 						}
 				}
@@ -385,11 +389,11 @@ public:
 						// -x side of wall
 						if ( (playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).z == wall->getStartPoint().z &&
 							(playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).x > wall->getStartPoint().x) {
-								return 1;
+								retValue = retValue == 0 ? 1 : 3;
 						}
 						if ( (playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).z == wall->getStartPoint().z &&
 							(playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).x < wall->getEndPoint().x) {
-								return 1;
+								retValue = retValue == 0 ? 1 : 3;
 						}
 				}
 			}
@@ -403,12 +407,12 @@ public:
 							// Coming from front of wall.
 							if (playerPos.x > wall->getStartPoint().x && 
 								(playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).x < wall->getStartPoint().x) {
-									return 2;
+									retValue = retValue == 0 ? 2 : 3;
 							}
 							// Coming from behind wall
 							if (playerPos.x < wall->getStartPoint().x &&
 								(playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).x > wall->getStartPoint().x) {
-									return 2;
+									retValue = retValue == 0 ? 2 : 3;
 							}
 						}
 				}
@@ -418,16 +422,16 @@ public:
 						// -x side of wall
 						if ( (playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).x == wall->getStartPoint().x &&
 							(playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).z > wall->getStartPoint().z) {
-								return 2;
+								retValue = retValue == 0 ? 2 : 3;
 						}
 						if ( (playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).x == wall->getStartPoint().x &&
 							(playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).z < wall->getEndPoint().z) {
-								return 2;
+								retValue = retValue == 0 ? 2 : 3;
 						}
 				}
 			}
 		}
-		return 0;
+		return retValue;
 	}
 
 	virtual void setViewPoint() 
