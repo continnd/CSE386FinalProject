@@ -3,7 +3,7 @@ class TiltController :
 	public Controller
 {
 public:
-	TiltController(int* view, bool* moveForward, bool* moveBack, bool* moveLeft, bool* moveRight, int* mouse_x, int* mouse_y, vec3* playerPos);
+	TiltController(int* view, bool* moveForward, int* mouse_x, int* mouse_y, vec3* playerPos);
 	virtual void update(float elapsedTimeSeconds);
 protected:
 	// Position at which the object is spinning in place

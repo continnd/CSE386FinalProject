@@ -2,14 +2,10 @@
 
 #define M_PI 3.1415926535897932384626433832795f
 
-TiltController::TiltController(int* view, bool* moveForward, bool* moveBack, bool* moveLeft, bool* moveRight, int* mouse_x, int* mouse_y, vec3* playerPos)
+TiltController::TiltController(int* view, bool* moveForward, int* mouse_x, int* mouse_y, vec3* playerPos)
 	:mf(moveForward),
-	mb(moveBack),
-	ml(moveLeft),
-	mr(moveRight),
 	v(view),
 	vertAngle(0.0f),
-	horiAngle(0.0f),
 	mx(mouse_x),
 	my(mouse_y),
 	pp(playerPos)
