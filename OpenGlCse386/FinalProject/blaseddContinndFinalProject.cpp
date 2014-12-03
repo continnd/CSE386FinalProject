@@ -292,15 +292,72 @@ public:
 	} // end update
 
 	bool checkWalls() {
-		// demo of wall detection
+		// demo of wall detection... should be easy to make this work on a vector of walls.
 		if (wall->getOrientation().x == 1) {
+			// Facing wall head-on
 			if (ufo->getWorldPosition().x > wall->getStartPoint().x &&
-				ufo->getWorldPosition().x < wall->getEndPoint().x)
+				ufo->getWorldPosition().x < wall->getEndPoint().x) {
 				// check proximity to wall
 				if (abs(wall->getStartPoint().z - ufo->getWorldPosition().z) <= 1.1f) {
-					// This needs to be smarter... for now I'm just turning off all ability to move.
-					return false;
+					// Coming from front of wall.
+					if (playerPos.z > wall->getStartPoint().z && 
+						(playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).z < wall->getStartPoint().z) {
+						return false;
+					}
+					// Coming from behind wall
+					if (playerPos.z < wall->getStartPoint().z &&
+						(playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).z > wall->getStartPoint().z) {
+						return false;
+					}
 				}
+			}
+			// Coming from edge of wall...is this even likely to happen?
+			else if (wall->getStartPoint().x - ufo->getWorldPosition().x <= 1.1f ||
+				 ufo->getWorldPosition().x - wall->getEndPoint().x <= 1.1f ) {
+					 // -x side of wall
+					 if ( (playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).z == wall->getStartPoint().z &&
+						 (playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).x > wall->getStartPoint().x) {
+							return false;
+					 }
+					 if ( (playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).z == wall->getStartPoint().z &&
+						 (playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).x < wall->getEndPoint().x) {
+							return false;
+					 }
+			}
+		}
+
+
+		if (wall->getOrientation().z == 1) {
+			// Facing wall head-on
+			if (ufo->getWorldPosition().z > wall->getStartPoint().z &&
+				ufo->getWorldPosition().z < wall->getEndPoint().z) {
+				// check proximity to wall
+				if (abs(wall->getStartPoint().x - ufo->getWorldPosition().x) <= 1.1f) {
+					// Coming from front of wall.
+					if (playerPos.x > wall->getStartPoint().x && 
+						(playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).x < wall->getStartPoint().x) {
+						return false;
+					}
+					// Coming from behind wall
+					if (playerPos.x < wall->getStartPoint().x &&
+						(playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).x > wall->getStartPoint().x) {
+						return false;
+					}
+				}
+			}
+			// Coming from edge of wall...is this even likely to happen?
+			else if (wall->getStartPoint().z - ufo->getWorldPosition().z <= 1.1f ||
+				 ufo->getWorldPosition().z - wall->getEndPoint().z <= 1.1f ) {
+					 // -x side of wall
+					 if ( (playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).x == wall->getStartPoint().x &&
+						 (playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).z > wall->getStartPoint().z) {
+							return false;
+					 }
+					 if ( (playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).x == wall->getStartPoint().x &&
+						 (playerPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).z < wall->getEndPoint().z) {
+							return false;
+					 }
+			}
 		}
 		return true;
 	}
