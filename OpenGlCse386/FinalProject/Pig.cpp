@@ -1,4 +1,5 @@
 #include "Pig.h"
+#include "LegController.h"
 
 
 Pig::Pig() {
@@ -35,6 +36,12 @@ Pig::Pig() {
 	addChild(leftEye);
 	addChild(leftNostril);
 	addChild(rightNostril);
+
+	frLeg->addController(new LegController(true));
+	flLeg->addController(new LegController(false));
+	brLeg->addController(new LegController(true));
+	blLeg->addController(new LegController(false));
+
 }
 
 

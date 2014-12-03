@@ -87,11 +87,13 @@
     <None Include="pfixed-function-shared-lighting-phong.frag" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\OpenGlCse386\LegController.cpp" />
     <ClCompile Include="blaseddContinndFinalProject.cpp" />
     <ClCompile Include="Pig.cpp" />
     <ClCompile Include="TiltController.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\OpenGlCse386\LegController.h" />
     <ClInclude Include="TiltController.h" />
     <ClInclude Include="Pig.h" />
   </ItemGroup>
