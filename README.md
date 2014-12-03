@@ -5,7 +5,7 @@ Fancy lighting!
 
 
 TODO:
-Add fog
+Add fog\n
 Adjust lights away from default setup
 Fix wall collision for walls in z direction
 Detect pigs arriving at UFO (end game)
