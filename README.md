@@ -19,6 +19,6 @@ Text on screen
 
 Sound -Doug
 
-Finish laying maze out. Includes placing an object at maze end. -Doug
+~~Finish laying maze out.~~ Includes placing an object at maze end. -Doug
 
 Separate the "floor" wall into its own class for texture mapping purposes. -Doug
