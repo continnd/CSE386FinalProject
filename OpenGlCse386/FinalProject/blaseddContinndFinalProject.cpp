@@ -100,9 +100,9 @@ public:
 		soundOn = false;
 
 		//Build the maze
-		makeWalls(vec3(-45.1, 0, 0), 40.1, X);
-		makeWalls(vec3(5, 0, 0), 40, X);
-		makeWalls(vec3(-45, 0, -90), 90.1, Z);
+		makeWalls(vec3(-45.1f, 0.0f, 0.0f), 40.1f, X);
+		makeWalls(vec3(5.0f, 0.0f, 0.0f), 40.0f, X);
+		makeWalls(vec3(-45.0f, 0.0f, -90.0f), 90.1f, Z);
 	}
 
 	void makeWalls(vec3 startLocation, int length, int orientation) {
@@ -292,10 +292,21 @@ public:
 		float windowWidth = float(glutGet(GLUT_WINDOW_WIDTH)/2);
 		float windowHeight = float(glutGet(GLUT_WINDOW_HEIGHT)/2);
 		glutPassiveMotionFunc(getMousePos);
-		if(view == 2)
+		if(view == 2){
 			glutWarpPointer((int)windowWidth, (int)windowHeight);
-		lookAtAngleXZ += ((mouse_x)/(windowWidth)/2.0f)*M_PI/2.0f;
-		lookAtAngleYZ -= ((mouse_y)/(windowHeight)/2.0f)*M_PI/2.0f;
+			lookAtAngleXZ += ((mouse_x)/(windowWidth)/2.0f)*M_PI/2.0f;
+			lookAtAngleYZ -= ((mouse_y)/(windowHeight)/2.0f)*M_PI/2.0f;
+		}
+		else if(view == 1) {
+			lookAtAngleXZ = acos(dot(vec3(0.0f, 0.0f, -1.0f),
+				vec3(mouse_x, 0.0f, mouse_y))/(length(vec3(0.0f, 0.0f, -1.0f))
+				*length(vec3(mouse_x, 0.0f, mouse_y))))*180/M_PI;
+			lookAtAngleYZ = 0.0f;
+		}
+		else {
+			lookAtAngleXZ = 0.0f;
+			lookAtAngleYZ = 0.0f;
+		}
 		if(lookAtAngleYZ > 80.0f * M_PI/180)
 			lookAtAngleYZ = 80.0f * M_PI/180;
 		else if(lookAtAngleYZ < -80.0f * M_PI/180)
@@ -313,6 +324,7 @@ public:
 			moveVec -= .25f*normalize(vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f)));
 		if(view == 2 && moveRight)
 			moveVec += .25f*normalize(vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f)));
+
 		checkWalls(&moveVec, playerPos);
 
 		playerPos += moveVec;
@@ -357,7 +369,7 @@ public:
 				}
 			}
 
-			if (wall->getOrientation().z == 1) {
+			else if (wall->getOrientation().z == 1) {
 				// Facing wall head-on
 				if (objPos.z > wall->getStartPoint().z &&
 					objPos.z < wall->getEndPoint().z) {
@@ -489,8 +501,10 @@ void viewMenu (int value)
 {
 	labClassPtr-> view = value;
 	cout << "View point " << value << endl;
-	if(labClassPtr -> view == 2)
+	if(labClassPtr -> view == 2){
 		glutSetCursor(GLUT_CURSOR_NONE);
+		glutWarpPointer((int)glutGet(GLUT_WINDOW_WIDTH)/2, (int)glutGet(GLUT_WINDOW_HEIGHT)/2);
+	}
 	else {
 		glutSetCursor(GLUT_CURSOR_LEFT_ARROW);
 	}
