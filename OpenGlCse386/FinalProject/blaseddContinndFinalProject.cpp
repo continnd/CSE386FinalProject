@@ -334,7 +334,7 @@ public:
 
 	void checkWalls(vec3* moveVec, vec3 objPos) {
 		// demo of wall detection... should be easy to make this work on a vector of walls.
-		for (int i = 0; i < walls.size(); i +=2) {
+		for (unsigned int i = 0; i < walls.size(); i +=2) {
 			Wall* wall = walls[i];
 			if (wall->getOrientation().x == 1) {
 				// Facing wall head-on
@@ -381,7 +381,7 @@ public:
 									*moveVec = vec3(0.0f, 0.0f, moveVec->z);
 							}
 							// Coming from behind wall
-							if (objPos.x < wall->getStartPoint().x &&
+							else if (objPos.x < wall->getStartPoint().x &&
 								(objPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).x > wall->getStartPoint().x) {
 									*moveVec = vec3(0.0f, 0.0f, moveVec->z);
 							}
@@ -395,7 +395,7 @@ public:
 							(objPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).z > wall->getStartPoint().z) {
 								*moveVec = vec3(moveVec->x, 0.0f, 0.0f);
 						}
-						if ( (objPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).x == wall->getStartPoint().x &&
+						else if ( (objPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).x == wall->getStartPoint().x &&
 							(objPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).z < wall->getEndPoint().z) {
 								*moveVec = vec3(moveVec->x, 0.0f, 0.0f);
 						}
