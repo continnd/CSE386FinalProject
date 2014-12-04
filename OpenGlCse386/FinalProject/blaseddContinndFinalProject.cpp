@@ -106,6 +106,17 @@ public:
 		makeWalls(vec3(-45.1f, 0.0f, 0.0f), 40.1f, X);
 		makeWalls(vec3(5.0f, 0.0f, 0.0f), 40.0f, X);
 		makeWalls(vec3(-45.0f, 0.0f, -90.0f), 90.1f, Z);
+		makeWalls(vec3(45.0f, 0.0f, -90.0f), 90.1f, Z);
+		makeWalls(vec3(-45.0f, 0.0f, -90.0f), 30.0f, X);
+		makeWalls(vec3(-5.0f, 0.0f, -90.0f), 50.0f, X);
+		makeWalls(vec3(35.0f, 0.0f, -90.0f), 30.0f, Z);
+		makeWalls(vec3(25.0f, 0.0f, -70.0f), 30.0f, X);
+		makeWalls(vec3(35.0f, 0.0f, -40.0f), 10.0f, X);
+		makeWalls(vec3(15.0f, 0.0f, -30.0f), 30.0f, Z);
+		makeWalls(vec3(15.0f, 0.0f, -30.0f), 10.0f, X);
+		makeWalls(vec3(-45.0f, 0.0f, -20.0f), 40.0f, X);
+		makeWalls(vec3(-25.0f, 0.0f, -70.0f), 50.0f, Z);
+		makeWalls(vec3(-25.0f, 0.0f, -40.0f), 40.0f, X);
 	}
 
 	void makeWalls(vec3 startLocation, float length, int orientation) {
