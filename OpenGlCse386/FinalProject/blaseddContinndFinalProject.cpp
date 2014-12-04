@@ -300,9 +300,11 @@ public:
 		GLfloat pigRot = atan(pigFacing.x/(pigFacing.z))*180/M_PI;
 		if(pigFacing.z < 0)
 			pigRot += 180;
+		pigFacing = 0.05f*normalize(pigFacing);
+		checkWalls(&pigFacing, pig->getWorldPosition(), 1.5);
 		pig->modelMatrix = translate(mat4(1.0f), pig->getWorldPosition()) *
-			rotate(mat4(1.0f), pigRot, vec3(0.0f, 1.0f, 0.0f)) * translate(mat4(1.0f),
-			vec3(0.0f, 0.0f, 0.05f));
+			translate(mat4(1.0f), pigFacing) * rotate(mat4(1.0f), pigRot,
+			vec3(0.0f, 1.0f, 0.0f));
 		float windowWidth = float(glutGet(GLUT_WINDOW_WIDTH)/2);
 		float windowHeight = float(glutGet(GLUT_WINDOW_HEIGHT)/2);
 		glutPassiveMotionFunc(getMousePos);
