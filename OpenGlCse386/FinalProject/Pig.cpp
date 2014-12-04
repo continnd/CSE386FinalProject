@@ -39,8 +39,8 @@ Pig::Pig() {
 
 	frLeg->addController(new LegController(true));
 	flLeg->addController(new LegController(false));
-	brLeg->addController(new LegController(true));
-	blLeg->addController(new LegController(false));
+	brLeg->addController(new LegController(false));
+	blLeg->addController(new LegController(true));
 
 }
 

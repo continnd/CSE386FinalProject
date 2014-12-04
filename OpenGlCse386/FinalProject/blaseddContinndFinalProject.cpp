@@ -105,7 +105,7 @@ public:
 		makeWalls(vec3(-45.0f, 0.0f, -90.0f), 90.1f, Z);
 	}
 
-	void makeWalls(vec3 startLocation, int length, int orientation) {
+	void makeWalls(vec3 startLocation, float length, int orientation) {
 		Wall *wall = new Wall(6.0f, length);
 		wall->material.setTextureMapped(true);
 		wall->material.setupTexture("stone.bmp");
@@ -270,7 +270,7 @@ public:
 	virtual void initialize()
 	{
 		glEnable(GL_DEPTH_TEST);
-		glClearColor(.50f, 0.5f, 0.5f, 1.0f);
+		glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 		glFrontFace(GL_CCW);
 		glCullFace(GL_BACK);
 		glEnable(GL_CULL_FACE);
@@ -325,38 +325,41 @@ public:
 		if(view == 2 && moveRight)
 			moveVec += .25f*normalize(vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f)));
 
-		checkWalls(&moveVec, playerPos);
+		checkWalls(&moveVec, playerPos, 1.0f);
 
 		playerPos += moveVec;
 
 		VisualObject::update(elapsedTimeSec);
 	} // end update
 
-	void checkWalls(vec3* moveVec, vec3 objPos) {
+	void checkWalls(vec3* moveVec, vec3 objPos, float objRad) {
 		// demo of wall detection... should be easy to make this work on a vector of walls.
-		for (unsigned int i = 0; i < walls.size(); i +=2) {
+		for (unsigned int i = 0; i < walls.size(); i += 2) {
 			Wall* wall = walls[i];
 			if (wall->getOrientation().x == 1) {
 				// Facing wall head-on
-				if (objPos.x > wall->getStartPoint().x &&
-					objPos.x < wall->getEndPoint().x) {
+				if ((objPos.x + objRad > wall->getStartPoint().x &&
+					objPos.x + objRad < wall->getEndPoint().x) || 
+					(objPos.x - objRad > wall->getStartPoint().x &&
+					objPos.x - objRad < wall->getEndPoint().x)) {
 						// check proximity to wall
-						if (abs(wall->getStartPoint().z - objPos.z) <= 1.1f) {
-							// Coming from front of wall.
-							if (objPos.z > wall->getStartPoint().z && 
-								(objPos + *moveVec).z < wall->getStartPoint().z) {
-									*moveVec = vec3(moveVec->x, 0.0f, 0.0f);
-							}
-							// Coming from behind wall
-							else if (objPos.z < wall->getStartPoint().z &&
-								(objPos + *moveVec).z > wall->getStartPoint().z) {
-									*moveVec = vec3(moveVec->x, 0.0f, 0.0f);
-							}
+						if (abs(wall->getStartPoint().z - (objPos.z + objRad)) <= 1.1f ||
+							abs(wall->getStartPoint().z - (objPos.z - objRad)) <= 1.1f) {
+								// Coming from front of wall.
+								if (objPos.z - objRad > wall->getStartPoint().z && 
+									(objPos + *moveVec).z - objRad < wall->getStartPoint().z) {
+										*moveVec = vec3(moveVec->x, 0.0f, 0.0f);
+								}
+								// Coming from behind wall
+								else if (objPos.z + objRad < wall->getStartPoint().z &&
+									(objPos + *moveVec).z + objRad > wall->getStartPoint().z) {
+										*moveVec = vec3(moveVec->x, 0.0f, 0.0f);
+								}
 						}
 				}
 				// Coming from edge of wall
-				else if (wall->getStartPoint().x - objPos.x <= 1.1f ||
-					objPos.x - wall->getEndPoint().x <= 1.1f ) {
+				else if (abs(wall->getStartPoint().x - objPos.x) <= 1.1f ||
+					abs(objPos.x - wall->getEndPoint().x) <= 1.1f) {
 						// -x side of wall
 						if ( (objPos + *moveVec).z == wall->getStartPoint().z &&
 							(objPos + *moveVec).x > wall->getStartPoint().x) {
@@ -369,22 +372,25 @@ public:
 				}
 			}
 
-			else if (wall->getOrientation().z == 1) {
+			if (wall->getOrientation().z == 1) {
 				// Facing wall head-on
-				if (objPos.z > wall->getStartPoint().z &&
-					objPos.z < wall->getEndPoint().z) {
+				if ((objPos.z + objRad > wall->getStartPoint().z &&
+					objPos.z + objRad < wall->getEndPoint().z) || 
+					(objPos.z - objRad > wall->getStartPoint().z &&
+					objPos.z - objRad < wall->getEndPoint().z)) {
 						// check proximity to wall
-						if (abs(wall->getStartPoint().x - objPos.x) <= 1.1f) {
-							// Coming from front of wall.
-							if (objPos.x > wall->getStartPoint().x && 
-								(objPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).x < wall->getStartPoint().x) {
-									*moveVec = vec3(0.0f, 0.0f, moveVec->z);
-							}
-							// Coming from behind wall
-							else if (objPos.x < wall->getStartPoint().x &&
-								(objPos + .25f*normalize(vec3(mouse_x, 0.0f, mouse_y))).x > wall->getStartPoint().x) {
-									*moveVec = vec3(0.0f, 0.0f, moveVec->z);
-							}
+						if (abs(wall->getStartPoint().x - (objPos.x + objRad)) <= 1.1f ||
+							abs(wall->getStartPoint().x - (objPos.x - objRad)) <= 1.1f) {
+								// Coming from front of wall.
+								if (objPos.x - objRad > wall->getStartPoint().x && 
+									(objPos + *moveVec).x - objRad < wall->getStartPoint().x) {
+										*moveVec = vec3(0.0f, 0.0f, moveVec->z);
+								}
+								// Coming from behind wall
+								else if (objPos.x + objRad < wall->getStartPoint().x &&
+									(objPos + *moveVec).x + objRad > wall->getStartPoint().x) {
+										*moveVec = vec3(0.0f, 0.0f, moveVec->z);
+								}
 						}
 				}
 				// Coming from edge of wall...is this even likely to happen?
