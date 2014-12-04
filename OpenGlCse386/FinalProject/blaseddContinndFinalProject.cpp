@@ -16,6 +16,7 @@
 #include "SoundSource.h"
 #include "Pig.h"
 #include "UFO.h"
+#include "font.h"
 
 #define M_PI 3.1415926535897932384626433832795f
 #define X 1
@@ -25,6 +26,7 @@ using namespace glm;
 int mouse_x, mouse_y;
 float lookAtAngleYZ, lookAtAngleXZ;
 vec3 playerPos;
+bool gameOver;
 
 class blaseddContinndFinalProject : public OpenGLApplicationBase
 {
@@ -49,6 +51,7 @@ public:
 	GLuint shaderProgram;
 	blaseddContinndFinalProject() : view(0), rotationX(0.0f), rotationY(0.0f), zTrans(-12.0f)
 	{
+		gameOver = false;
 		moveForward = false;
 		moveBack = false;
 		moveLeft = false;
@@ -73,7 +76,7 @@ public:
 		addChild(floor);
 		addChild(pig);
 		addChild(ufo);
-		//sound->play();
+		// sound->play();
 		// Create array of ShaderInfo structs that specifies the vertex and 
 		// fragment shaders to be compiled and linked into a program. 
 		ShaderInfo shaders[] = { 
@@ -328,8 +331,10 @@ public:
 		checkWalls(&moveVec, playerPos, 1.0f);
 
 		playerPos += moveVec;
-
 		VisualObject::update(elapsedTimeSec);
+
+		if(length(playerPos - pig->getWorldPosition()) <= 1.5f)
+			gameOver = true;
 	} // end update
 
 	void checkWalls(vec3* moveVec, vec3 objPos, float objRad) {
@@ -441,6 +446,9 @@ public:
 		//glViewport(0, 0, windowWidth / 2, windowHeight); 
 		// Update the projection matrix in the shaders
 		//projectionAndViewing.setProjectionMatrix(glm::perspective(45.0f, aspect, 0.1f, 100.f));
+		if(gameOver) {
+			screenTextOutput((int)windowWidth - 10, (int)windowHeight, "YOU LOSE!", vec4(0.0f, 0.0f, 0.0f, 1.0f));
+		} else
 		VisualObject::draw();
 
 		//glViewport(windowWidth/2, 0, windowWidth / 2, windowHeight); 

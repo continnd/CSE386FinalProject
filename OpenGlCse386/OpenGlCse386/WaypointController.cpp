@@ -8,7 +8,6 @@ WaypointController::WaypointController(vector<glm::vec3> wp, GLfloat r)
 	currentWaypoint = 1;
 	rate = r;
 	velocity = glm::normalize(waypoints.at(currentWaypoint) - position) *rate;
-	
 }
 
 
