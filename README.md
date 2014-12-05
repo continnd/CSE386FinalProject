@@ -17,7 +17,9 @@ Detect pigs arriving at UFO (end game)
 
 Text on screen 
 
-Sound -Doug
+Transparency
+
+~~Sound -Doug~~
 
 ~~Finish laying maze out.~~ Includes placing an object at maze end. -Doug
 
