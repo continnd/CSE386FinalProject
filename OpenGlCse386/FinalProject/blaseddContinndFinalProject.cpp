@@ -187,7 +187,7 @@ public:
 		generalLighting.setSpecularColor( GL_LIGHT_THREE,
 			vec4(1.0f, 1.0f, 1.0f, 1.0f) );
 		generalLighting.setPositionOrDirection( GL_LIGHT_THREE,
-			vec4(0.0f, 8.0f, 0.0f, 1.0f) );
+			vec4(-10.f, 0.f, -90.f, 1.0f) );
 		generalLighting.setSpotDirection( GL_LIGHT_THREE,
 			vec3(0.0f, -1.0f, 0.0f) );
 		generalLighting.setSpotCutoffCos( GL_LIGHT_THREE,
