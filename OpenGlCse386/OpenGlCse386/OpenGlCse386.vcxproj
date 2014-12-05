@@ -21,6 +21,7 @@
     <ClCompile Include="Cylinder.cpp" />
     <ClCompile Include="Floor.cpp" />
     <ClCompile Include="Floor2.cpp" />
+    <ClCompile Include="Floor3.cpp" />
     <ClCompile Include="Framework.cpp" />
     <ClCompile Include="glutBase.cpp" />
     <ClCompile Include="LoadOAL.cpp" />
@@ -56,6 +57,7 @@
     <ClInclude Include="efx.h" />
     <ClInclude Include="Floor.h" />
     <ClInclude Include="Floor2.h" />
+    <ClInclude Include="Floor3.h" />
     <ClInclude Include="font.h" />
     <ClInclude Include="Framework.h" />
     <ClInclude Include="glutBase.h" />

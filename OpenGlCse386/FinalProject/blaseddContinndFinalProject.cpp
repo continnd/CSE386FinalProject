@@ -1,6 +1,6 @@
 #include "OpenGLApplicationBase.h"
 #include "glutbase.h"
-#include "Floor2.h"
+#include "Floor3.h"
 #include "Pyramid.h"
 #include "Sphere.h"
 #include "SpinnerController.h"
@@ -26,7 +26,7 @@ using namespace glm;
 int mouse_x, mouse_y;
 float lookAtAngleYZ, lookAtAngleXZ;
 vec3 playerPos;
-bool gameOver;
+bool playerLoses, playerWins;
 
 class blaseddContinndFinalProject : public OpenGLApplicationBase
 {
@@ -34,9 +34,10 @@ public:
 	friend void viewMenu(int value);
 	friend void SpecialKeyboardCB(int Key, int x, int y);
 	friend void getMousePos(int x, int y);
-	Wall* floor;
+	Floor3* floor;
 	Pig* pig;
 	UFO* ufo;
+	Pyramid* winningItem;
 	int view;
 	GLfloat rotationX, rotationY, zTrans;
 	SharedGeneralLighting generalLighting;
@@ -51,7 +52,7 @@ public:
 	GLuint shaderProgram;
 	blaseddContinndFinalProject() : view(0), rotationX(0.0f), rotationY(0.0f), zTrans(-12.0f)
 	{
-		gameOver = false;
+		playerLoses = playerWins = false;
 		moveForward = false;
 		moveBack = false;
 		moveLeft = false;
@@ -60,22 +61,24 @@ public:
 		lookAtAngleYZ = 0.0;
 		lookAtAngleXZ = 0.0;
 		playerPos = vec3(0.0f, 0.0f, 12.0f);
-		floor = new Wall(90,90);
+		floor = new Floor3(90,90);
 		floor->material.setTextureMapped(true);
 		floor->material.setupTexture("brick.bmp");
 
-		//sound = new SoundSource("Footsteps.wav"); 
-		//sound->setLooping(true); 
-
+		sound = new SoundSource("music.wav"); 
+		sound->setLooping(true); 
+		sound->play();
 		pig = new Pig();
 		ufo = new UFO();
 
 		ufo->addController(new TiltController(&view, &moveForward, &mouse_x, &mouse_y, &playerPos));
 
+		winningItem = new Pyramid(3,3);
 
 		addChild(floor);
 		addChild(pig);
 		addChild(ufo);
+		addChild(winningItem);
 		// sound->play();
 		// Create array of ShaderInfo structs that specifies the vertex and 
 		// fragment shaders to be compiled and linked into a program. 
@@ -91,6 +94,10 @@ public:
 		floor->setShader(shaderProgram);
 		floor->modelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -3.0f, 0.0f)) * rotate(mat4(1.0f), 90.f, vec3(-1,0,0));
 		ufo->setShader(shaderProgram);
+		winningItem->setShader(shaderProgram);
+		winningItem->material.setTextureMapped(true);
+		winningItem->material.setupTexture("test.bmp");
+		winningItem->modelMatrix = translate(mat4(1.0f), vec3(-10, -1.5, -90));
 		pig->setShader(shaderProgram);
 		pig->setAmbientAndDiffuseMat(vec4(0.f, 0.0f, 0.0f, 1.f));
 		pig->setEmissiveMat(vec4(0.f, 0.0f, .0f, 1.f));
@@ -115,7 +122,7 @@ public:
 		makeWalls(vec3(15.0f, 0.0f, -30.0f), 30.0f, Z);
 		makeWalls(vec3(15.0f, 0.0f, -30.0f), 10.0f, X);
 		makeWalls(vec3(-45.0f, 0.0f, -20.0f), 40.0f, X);
-		makeWalls(vec3(-25.0f, 0.0f, -70.0f), 50.0f, Z);
+		makeWalls(vec3(-25.0f, 0.0f, -70.0f), 60.0f, Z);
 		makeWalls(vec3(-25.0f, 0.0f, -40.0f), 40.0f, X);
 	}
 
@@ -180,7 +187,7 @@ public:
 		generalLighting.setSpecularColor( GL_LIGHT_THREE,
 			vec4(1.0f, 1.0f, 1.0f, 1.0f) );
 		generalLighting.setPositionOrDirection( GL_LIGHT_THREE,
-			vec4(0.0f, 8.0f, 0.0f, 1.0f) );
+			vec4(-10.f, 0.f, -90.f, 1.0f) );
 		generalLighting.setSpotDirection( GL_LIGHT_THREE,
 			vec3(0.0f, -1.0f, 0.0f) );
 		generalLighting.setSpotCutoffCos( GL_LIGHT_THREE,
@@ -346,8 +353,10 @@ public:
 		playerPos += moveVec;
 		VisualObject::update(elapsedTimeSec);
 
-		if(length(playerPos - pig->getWorldPosition()) <= 2.3f)
-			gameOver = true;
+		if(length(playerPos - pig->getWorldPosition()) <= 1.5f)
+			playerLoses = true;
+		if(length(playerPos - winningItem->getWorldPosition()) <= 3.5f)
+			playerWins = true;
 	} // end update
 
 	void checkWalls(vec3* moveVec, vec3 objPos, float objRad) {
@@ -454,19 +463,14 @@ public:
 	virtual void draw() {
 		GLuint windowWidth = glutGet(GLUT_WINDOW_WIDTH);
 		GLuint windowHeight = glutGet(GLUT_WINDOW_HEIGHT);
-		GLfloat aspect = (GLfloat)(windowWidth) / (GLfloat)windowHeight/2;
-
-		//glViewport(0, 0, windowWidth / 2, windowHeight); 
-		// Update the projection matrix in the shaders
-		//projectionAndViewing.setProjectionMatrix(glm::perspective(45.0f, aspect, 0.1f, 100.f));
-		if(gameOver) {
-			screenTextOutput((int)windowWidth - 10, (int)windowHeight, "YOU LOSE!", vec4(0.0f, 0.0f, 0.0f, 1.0f));
-		} else
+		if(playerLoses) {
+			screenTextOutput(windowWidth/2 - 50, windowHeight/2, "YOU LOSE!", vec4(0.0f, 0.0f, 0.0f, 1.0f));
+		} 
+		else if(playerWins) {
+			screenTextOutput(windowWidth/2 - 40, windowHeight/2, "YOU WIN!", vec4(0.0f, 0.0f, 0.0f, 1.0f));
+		}else
 		VisualObject::draw();
 
-		//glViewport(windowWidth/2, 0, windowWidth / 2, windowHeight); 
-		//projectionAndViewing.setProjectionMatrix(glm::ortho(-3.5f,3.5f,-5.0f,5.0f,.1f,100.0f));
-		//VisualObject::draw();
 	}
 
 	// Set the position, orientation and velocity of the listener 
