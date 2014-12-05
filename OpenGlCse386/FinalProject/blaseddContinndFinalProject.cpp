@@ -346,7 +346,7 @@ public:
 		playerPos += moveVec;
 		VisualObject::update(elapsedTimeSec);
 
-		if(length(playerPos - pig->getWorldPosition()) <= 1.5f)
+		if(length(playerPos - pig->getWorldPosition()) <= 2.3f)
 			gameOver = true;
 	} // end update
 
