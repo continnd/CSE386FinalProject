@@ -7,7 +7,7 @@ Fancy lighting!
 
 TODO:
 
-Add fog
+Add fog - not required, actually....
 
 Adjust lights away from default setup
 
