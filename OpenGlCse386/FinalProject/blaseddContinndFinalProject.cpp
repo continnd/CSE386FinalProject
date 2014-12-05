@@ -1,6 +1,6 @@
 #include "OpenGLApplicationBase.h"
 #include "glutbase.h"
-#include "Floor2.h"
+#include "Floor3.h"
 #include "Pyramid.h"
 #include "Sphere.h"
 #include "SpinnerController.h"
@@ -34,7 +34,7 @@ public:
 	friend void viewMenu(int value);
 	friend void SpecialKeyboardCB(int Key, int x, int y);
 	friend void getMousePos(int x, int y);
-	Wall* floor;
+	Floor3* floor;
 	Pig* pig;
 	UFO* ufo;
 	int view;
@@ -60,13 +60,13 @@ public:
 		lookAtAngleYZ = 0.0;
 		lookAtAngleXZ = 0.0;
 		playerPos = vec3(0.0f, 0.0f, 12.0f);
-		floor = new Wall(90,90);
+		floor = new Floor3(90,90);
 		floor->material.setTextureMapped(true);
 		floor->material.setupTexture("brick.bmp");
 
-		//sound = new SoundSource("Footsteps.wav"); 
-		//sound->setLooping(true); 
-
+		sound = new SoundSource("music.wav"); 
+		sound->setLooping(true); 
+		sound->play();
 		pig = new Pig();
 		ufo = new UFO();
 
