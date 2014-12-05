@@ -35,8 +35,9 @@ public:
 	friend void SpecialKeyboardCB(int Key, int x, int y);
 	friend void getMousePos(int x, int y);
 	Floor3* floor;
-	Pig* pig;
+	//Pig* pig;
 	UFO* ufo;
+	Cube* box;
 	Pyramid* winningItem;
 	int view;
 	GLfloat rotationX, rotationY, zTrans;
@@ -49,6 +50,7 @@ public:
 	bool moveRight;
 	vec3 direction;
 	vector<Wall*>walls;
+	vector<Pig*> pigs;
 	GLuint shaderProgram;
 	blaseddContinndFinalProject() : view(0), rotationX(0.0f), rotationY(0.0f), zTrans(-12.0f)
 	{
@@ -67,19 +69,18 @@ public:
 
 		sound = new SoundSource("music.wav"); 
 		sound->setLooping(true); 
-		sound->play();
-		pig = new Pig();
-		ufo = new UFO();
+		sound->play(); 
 
+		ufo = new UFO();
+		box = new Cube(3.75, 3, 3.75);
 		ufo->addController(new TiltController(&view, &moveForward, &mouse_x, &mouse_y, &playerPos));
 
 		winningItem = new Pyramid(3,3);
 
 		addChild(floor);
-		addChild(pig);
 		addChild(ufo);
 		addChild(winningItem);
-		// sound->play();
+		addChild(box);
 		// Create array of ShaderInfo structs that specifies the vertex and 
 		// fragment shaders to be compiled and linked into a program. 
 		ShaderInfo shaders[] = { 
@@ -91,23 +92,24 @@ public:
 		shaderProgram = BuildShaderProgram(shaders);
 		projectionAndViewing.setUniformBlockForShader(shaderProgram);
 		generalLighting.setUniformBlockForShader(shaderProgram);
+		box->setShader(shaderProgram);
 		floor->setShader(shaderProgram);
 		floor->modelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -3.0f, 0.0f)) * rotate(mat4(1.0f), 90.f, vec3(-1,0,0));
 		ufo->setShader(shaderProgram);
 		winningItem->setShader(shaderProgram);
 		winningItem->material.setTextureMapped(true);
 		winningItem->material.setupTexture("test.bmp");
-		winningItem->modelMatrix = translate(mat4(1.0f), vec3(-10, -1.5, -90));
-		pig->setShader(shaderProgram);
-		pig->setAmbientAndDiffuseMat(vec4(0.f, 0.0f, 0.0f, 1.f));
-		pig->setEmissiveMat(vec4(0.f, 0.0f, .0f, 1.f));
-		pig->setSpecularMat(vec4(0.f, 0.0f, .0f, 1.f));
-		pig->setTextureMapped(true);
-		pig->setTexture("metal.bmp");
+		winningItem->addController(new SpinnerController(vec3(-10, -1.5, -90), vec3(0,1,0)));
+
+
+
 		setupLighting(shaderProgram);
-			
+
+		box->material.setAmbientAndDiffuseMat(vec4(0.1f, 0.1f, 0.5f, 0.5f));
+		box->modelMatrix = translate(mat4(1.0f), vec3(-10, -1.5, -89.25));
+
 		ufo->update(0);
-		soundOn = false;
+		soundOn = true;
 
 		//Build the maze
 		makeWalls(vec3(-45.1f, 0.0f, 0.0f), 40.1f, X);
@@ -124,6 +126,13 @@ public:
 		makeWalls(vec3(-45.0f, 0.0f, -20.0f), 40.0f, X);
 		makeWalls(vec3(-25.0f, 0.0f, -70.0f), 60.0f, Z);
 		makeWalls(vec3(-25.0f, 0.0f, -40.0f), 40.0f, X);
+
+
+		deployPig(vec3(0,0,0));
+		deployPig(vec3(-30,0,-40));
+		deployPig(vec3(30,0,-85));
+		deployPig(vec3(20,0,-15));
+		deployPig(vec3(20,0,-65));
 	}
 
 	void makeWalls(vec3 startLocation, float length, int orientation) {
@@ -156,6 +165,23 @@ public:
 
 		walls.push_back(wall);
 		addChild(wall);
+	}
+
+	void deployPig(vec3 pos) {
+		Pig *pig = new Pig();
+		SoundSource* pigSound = new SoundSource("pig.wav"); 
+		pigSound->setLooping(true);
+		pig->addChild(pigSound);
+		addChild(pig);
+		pig->setShader(shaderProgram);
+		pig->modelMatrix = translate(mat4(1.0f), pos);
+		pig->setAmbientAndDiffuseMat(vec4(0.f, 0.0f, 0.0f, 1.f));
+		pig->setEmissiveMat(vec4(0.f, 0.0f, .0f, 1.f));
+		pig->setSpecularMat(vec4(0.f, 0.0f, .0f, 1.f));
+		pig->setTextureMapped(true);
+		pig->setTexture("metal.bmp");
+		pigs.push_back(pig);
+		pigSound->play();
 	}
 
 	void setupLighting(GLuint shaderProgram) {
@@ -303,15 +329,22 @@ public:
 	// Update scene objects inbetween frames 
 	virtual void update( float elapsedTimeSec ) 
 	{ 
-		vec3 pigFacing = playerPos - pig->getWorldPosition();
-		GLfloat pigRot = atan(pigFacing.x/(pigFacing.z))*180/M_PI;
-		if(pigFacing.z < 0)
-			pigRot += 180;
-		pigFacing = 0.05f*normalize(pigFacing);
-		checkWalls(&pigFacing, pig->getWorldPosition(), 1.5);
-		pig->modelMatrix = translate(mat4(1.0f), pig->getWorldPosition()) *
-			translate(mat4(1.0f), pigFacing) * rotate(mat4(1.0f), pigRot,
-			vec3(0.0f, 1.0f, 0.0f));
+		for (int i = 0; i < pigs.size(); i++) {
+			Pig* pig = pigs.at(i);
+			vec3 pigFacing = playerPos - pig->getWorldPosition();
+			GLfloat pigRot = atan(pigFacing.x/(pigFacing.z))*180/M_PI;
+			if(pigFacing.z < 0)
+				pigRot += 180;
+			pigFacing = 0.05f*normalize(pigFacing);
+			checkWalls(&pigFacing, pig->getWorldPosition(), 1.5);
+			pig->modelMatrix = translate(mat4(1.0f), pig->getWorldPosition()) *
+				translate(mat4(1.0f), pigFacing) * rotate(mat4(1.0f), pigRot,
+				vec3(0.0f, 1.0f, 0.0f));
+			if(length(playerPos - pig->getWorldPosition()) <= 1.5f) {
+				playerLoses = true;
+				break;
+			}
+		}
 		float windowWidth = float(glutGet(GLUT_WINDOW_WIDTH)/2);
 		float windowHeight = float(glutGet(GLUT_WINDOW_HEIGHT)/2);
 		glutPassiveMotionFunc(getMousePos);
@@ -353,8 +386,6 @@ public:
 		playerPos += moveVec;
 		VisualObject::update(elapsedTimeSec);
 
-		if(length(playerPos - pig->getWorldPosition()) <= 1.5f)
-			playerLoses = true;
 		if(length(playerPos - winningItem->getWorldPosition()) <= 3.5f)
 			playerWins = true;
 	} // end update
@@ -469,7 +500,7 @@ public:
 		else if(playerWins) {
 			screenTextOutput(windowWidth/2 - 40, windowHeight/2, "YOU WIN!", vec4(0.0f, 0.0f, 0.0f, 1.0f));
 		}else
-		VisualObject::draw();
+			VisualObject::draw();
 
 	}
 
