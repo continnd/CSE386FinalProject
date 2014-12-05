@@ -15,7 +15,7 @@ Adjust lights away from default setup
 
 ~~Detect pigs arriving at UFO (end game)~~
 
-~~Text on screen ~~
+~~Text on screen~~
 
 Transparency
 
