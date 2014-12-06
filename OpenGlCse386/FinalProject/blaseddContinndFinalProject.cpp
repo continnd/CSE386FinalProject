@@ -48,11 +48,13 @@ public:
 	bool moveBack;
 	bool moveLeft;
 	bool moveRight;
+	bool pause;
+	bool debug;
 	vec3 direction;
 	vector<Wall*>walls;
 	vector<Pig*> pigs;
 	GLuint shaderProgram;
-	blaseddContinndFinalProject() : view(1), rotationX(0.0f), rotationY(0.0f), zTrans(-12.0f)
+	blaseddContinndFinalProject() : view(1), rotationX(0.0f), rotationY(0.0f), zTrans(-12.0f), debug(false), pause(false)
 	{
 		playerLoses = playerWins = false;
 		moveForward = false;
@@ -126,6 +128,8 @@ public:
 		makeWalls(vec3(-45.0f, 0.0f, -20.0f), 40.0f, X);
 		makeWalls(vec3(-25.0f, 0.0f, -70.0f), 60.0f, Z);
 		makeWalls(vec3(-25.0f, 0.0f, -40.0f), 40.0f, X);
+		makeWalls(vec3(-15,0,0), 30.f, Z);
+		makeWalls(vec3(15,0,0), 30.f, Z);
 
 
 		deployPig(vec3(0,0,-20));
@@ -133,6 +137,7 @@ public:
 		deployPig(vec3(30,0,-85));
 		deployPig(vec3(20,0,-15));
 		deployPig(vec3(20,0,-65));
+		deployPig(vec3(-45,0,-20));
 	}
 
 	void reset() {
@@ -164,7 +169,7 @@ public:
 		ufo = new UFO();
 		ufo->addController(new TiltController(&view, &moveForward, &mouse_x, &mouse_y, &playerPos));
 		//ufo->modelMatrix = translate(mat4(1.0f), vec3(0,0,0));
-		
+
 		ufo->update(0);
 	}
 
@@ -290,6 +295,10 @@ public:
 			if (soundOn) { sound->play(); } 
 			else { sound->pause(); } 
 			break;
+		case 'o':
+			if (debug)
+				pause = !pause;
+			break;
 		default:
 			OpenGLApplicationBase::KeyboardCB(Key, x, y);
 		}
@@ -351,71 +360,73 @@ public:
 	// Update scene objects inbetween frames 
 	virtual void update( float elapsedTimeSec ) 
 	{ 
-		if (!playerWins && !playerLoses) {
-			for (int i = 0; i < pigs.size(); i++) {
-				Pig* pig = pigs.at(i);
-				vec3 pigFacing = playerPos - pig->getWorldPosition();
-				pigFacing = vec3(pigFacing.x, 0.0f, pigFacing.z);
-				GLfloat pigRot = atan(pigFacing.x/(pigFacing.z))*180/M_PI;
-				if(length(pig->getWorldPosition()-playerPos) < 10.0f && !pig->soundPlaying())
-					pig->playPigSound();
-				else if (length(pig->getWorldPosition()-playerPos) >= 10.0f && pig->soundPlaying())
-					pig->pausePigSound();
-				if(pigFacing.z < 0)
-					pigRot += 180;
-				pigFacing = 0.05f*normalize(pigFacing);
-				checkWalls(&pigFacing, pig->getWorldPosition(), 1.5);
-				pig->modelMatrix = translate(mat4(1.0f), pig->getWorldPosition()) *
-					translate(mat4(1.0f), pigFacing) * rotate(mat4(1.0f), pigRot,
-					vec3(0.0f, 1.0f, 0.0f));
-				if(length(playerPos - pig->getWorldPosition()) <= 3.0f) {
-					playerLoses = true;
-					break;
+		if (!pause) {
+			if (!playerWins && !playerLoses) {
+				for (int i = 0; i < pigs.size(); i++) {
+					Pig* pig = pigs.at(i);
+					vec3 pigFacing = playerPos - pig->getWorldPosition();
+					pigFacing = vec3(pigFacing.x, 0.0f, pigFacing.z);
+					GLfloat pigRot = atan(pigFacing.x/(pigFacing.z))*180/M_PI;
+					if(length(pig->getWorldPosition()-playerPos) < 10.0f && !pig->soundPlaying())
+						pig->playPigSound();
+					else if (length(pig->getWorldPosition()-playerPos) >= 10.0f && pig->soundPlaying())
+						pig->pausePigSound();
+					if(pigFacing.z < 0)
+						pigRot += 180;
+					pigFacing = 0.05f*normalize(pigFacing);
+					checkWalls(&pigFacing, pig->getWorldPosition(), 1.5);
+					pig->modelMatrix = translate(mat4(1.0f), pig->getWorldPosition()) *
+						translate(mat4(1.0f), pigFacing) * rotate(mat4(1.0f), pigRot,
+						vec3(0.0f, 1.0f, 0.0f));
+					if(length(playerPos - pig->getWorldPosition()) <= 3.0f) {
+						playerLoses = true;
+						break;
+					}
 				}
-			}
-			float windowWidth = float(glutGet(GLUT_WINDOW_WIDTH)/2);
-			float windowHeight = float(glutGet(GLUT_WINDOW_HEIGHT)/2);
-			glutPassiveMotionFunc(getMousePos);
-			if(view == 2){
-				glutWarpPointer((int)windowWidth, (int)windowHeight);
-				lookAtAngleXZ += ((mouse_x)/(windowWidth)/2.0f)*M_PI/2.0f;
-				lookAtAngleYZ -= ((mouse_y)/(windowHeight)/2.0f)*M_PI/2.0f;
-			}
-			else if(view == 1) {
-				lookAtAngleXZ = acos(dot(vec3(0.0f, 0.0f, -1.0f),
-					vec3(mouse_x, 0.0f, mouse_y))/(length(vec3(0.0f, 0.0f, -1.0f))
-					*length(vec3(mouse_x, 0.0f, mouse_y))))*180/M_PI;
-				lookAtAngleYZ = 0.0f;
-			}
-			else {
-				lookAtAngleXZ = 0.0f;
-				lookAtAngleYZ = 0.0f;
-			}
-			if(lookAtAngleYZ > 80.0f * M_PI/180)
-				lookAtAngleYZ = 80.0f * M_PI/180;
-			else if(lookAtAngleYZ < -80.0f * M_PI/180)
-				lookAtAngleYZ = -80.0f * M_PI/180;
-			setViewPoint();
+				float windowWidth = float(glutGet(GLUT_WINDOW_WIDTH)/2);
+				float windowHeight = float(glutGet(GLUT_WINDOW_HEIGHT)/2);
+				glutPassiveMotionFunc(getMousePos);
+				if(view == 2){
+					glutWarpPointer((int)windowWidth, (int)windowHeight);
+					lookAtAngleXZ += ((mouse_x)/(windowWidth)/2.0f)*M_PI/2.0f;
+					lookAtAngleYZ -= ((mouse_y)/(windowHeight)/2.0f)*M_PI/2.0f;
+				}
+				else if(view == 1) {
+					lookAtAngleXZ = acos(dot(vec3(0.0f, 0.0f, -1.0f),
+						vec3(mouse_x, 0.0f, mouse_y))/(length(vec3(0.0f, 0.0f, -1.0f))
+						*length(vec3(mouse_x, 0.0f, mouse_y))))*180/M_PI;
+					lookAtAngleYZ = 0.0f;
+				}
+				else {
+					lookAtAngleXZ = 0.0f;
+					lookAtAngleYZ = 0.0f;
+				}
+				if(lookAtAngleYZ > 80.0f * M_PI/180)
+					lookAtAngleYZ = 80.0f * M_PI/180;
+				else if(lookAtAngleYZ < -80.0f * M_PI/180)
+					lookAtAngleYZ = -80.0f * M_PI/180;
+				setViewPoint();
 
-			vec3 moveVec = vec3(0.0f, 0.0f, 0.0f);
-			if(view == 2 && moveForward)
-				moveVec += .25f*normalize(vec3(sin(lookAtAngleXZ), 0.0f, -cos(lookAtAngleXZ)));
-			else if(view == 1 && moveForward)
-				moveVec += .25f*normalize(vec3(mouse_x, 0.0f, mouse_y));
-			if(view == 2 && moveBack)
-				moveVec -= .25f*normalize(vec3(sin(lookAtAngleXZ), 0.0f, -cos(lookAtAngleXZ)));
-			if(view == 2 && moveLeft)
-				moveVec -= .25f*normalize(vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f)));
-			if(view == 2 && moveRight)
-				moveVec += .25f*normalize(vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f)));
+				vec3 moveVec = vec3(0.0f, 0.0f, 0.0f);
+				if(view == 2 && moveForward)
+					moveVec += .25f*normalize(vec3(sin(lookAtAngleXZ), 0.0f, -cos(lookAtAngleXZ)));
+				else if(view == 1 && moveForward)
+					moveVec += .25f*normalize(vec3(mouse_x, 0.0f, mouse_y));
+				if(view == 2 && moveBack)
+					moveVec -= .25f*normalize(vec3(sin(lookAtAngleXZ), 0.0f, -cos(lookAtAngleXZ)));
+				if(view == 2 && moveLeft)
+					moveVec -= .25f*normalize(vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f)));
+				if(view == 2 && moveRight)
+					moveVec += .25f*normalize(vec3(sin(lookAtAngleXZ + M_PI/2.0f), 0.0f, -cos(lookAtAngleXZ + M_PI/2.0f)));
 
-			checkWalls(&moveVec, playerPos, 1.0f);
+				checkWalls(&moveVec, playerPos, 1.0f);
 
-			playerPos += moveVec;
-			VisualObject::update(elapsedTimeSec);
+				playerPos += moveVec;
+				VisualObject::update(elapsedTimeSec);
 
-			if(length(playerPos - winningItem->getWorldPosition()) <= 3.5f)
-				playerWins = true;
+				if(length(playerPos - winningItem->getWorldPosition()) <= 3.5f)
+					playerWins = true;
+			}
 		}
 	} // end update
 
@@ -563,8 +574,8 @@ protected:
 		GLuint menuId = glutCreateMenu(viewMenu);
 		// Specify menu items and their integer identifiers
 		//glutAddMenuEntry("Default", 0);
-		glutAddMenuEntry("View 1", 1);
-		glutAddMenuEntry("View 2", 2);
+		glutAddMenuEntry("Overhead", 1);
+		glutAddMenuEntry("First-person", 2);
 
 		return menuId;
 	}
@@ -580,7 +591,7 @@ blaseddContinndFinalProject* labClassPtr;
 int main(int argc, char** argv) 
 {
 	GLUTBaseInit(argc, argv);
-	GLUTBaseCreateWindow( "CSE 386 Lab 10" );
+	GLUTBaseCreateWindow( "Blase/Contini Final Project" );
 
 	blaseddContinndFinalProject pApp;
 
