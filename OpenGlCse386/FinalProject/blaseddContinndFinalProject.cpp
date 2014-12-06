@@ -285,7 +285,7 @@ public:
 			lightOn = generalLighting.getEnabled( GL_LIGHT_THREE );
 			generalLighting.setEnabled( GL_LIGHT_THREE, !lightOn );
 			break;
-		case 'f': 
+		case 'v': 
 			soundOn = !sound->isPlaying(); 
 			if (soundOn) { sound->play(); } 
 			else { sound->pause(); } 
