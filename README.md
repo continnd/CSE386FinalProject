@@ -9,7 +9,7 @@ TODO:
 
 Add fog - not required, actually....
 
-Adjust lights away from default setup - kinda done? May need to change more lights...
+~~Adjust lights away from default setup - kinda done? May need to change more lights...~~
 
 ~~Fix wall collision for walls in z direction and for view 2 movement equation.~~
 
