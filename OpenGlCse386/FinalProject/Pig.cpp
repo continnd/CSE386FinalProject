@@ -15,6 +15,9 @@ Pig::Pig() {
 	leftNostril = new Sphere(.1f);
 	rightNostril = new Sphere(.1f);
 
+	pigSound = new SoundSource("pig.wav");
+	pigSound->setLooping(true);
+	this->addChild(pigSound);
 
 	flLeg->fixedTransformation = translate(mat4(1.0f), vec3(.5f, -.5f, .5f)) * rotate(mat4(1.0f), 90.f, vec3(1, 0, 0));
 	frLeg->fixedTransformation = translate(mat4(1.0f), vec3(-.5f, -.5f, .5f)) * rotate(mat4(1.0f), 90.f, vec3(1, 0, 0));
@@ -41,7 +44,8 @@ Pig::Pig() {
 	flLeg->addController(new LegController(false));
 	brLeg->addController(new LegController(false));
 	blLeg->addController(new LegController(true));
-
+	pigSound->play();
+	soundOn = true;
 }
 
 
@@ -115,6 +119,20 @@ void Pig::setTexture(string texture) {
 	blLeg->material.setupTexture(texture);
 	body->material.setupTexture(texture);
 	face->material.setupTexture(texture);
+}
+
+void Pig::playPigSound() {
+	pigSound->play();
+	soundOn = true;
+}
+
+void Pig::pausePigSound() {
+	pigSound->pause();
+	soundOn = false;
+}
+
+bool Pig::soundPlaying() {
+	return soundOn;
 }
 
 void Pig::draw() {

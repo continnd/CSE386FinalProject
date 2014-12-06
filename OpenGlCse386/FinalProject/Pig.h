@@ -2,6 +2,7 @@
 #include "Cylinder.h"
 #include "Sphere.h"
 #include "VisualObject.h"
+#include "SoundSource.h"
 class Pig : public VisualObject
 {
 public:
@@ -14,11 +15,16 @@ public:
 	void setShader(GLuint shaderProgram);
 	void setTextureMapped(bool isMapped);
 	void setTexture(string fileName);
+	void pausePigSound();
+	void playPigSound();
+	bool soundPlaying();
 
 	void draw();
 
 private:
 	Cylinder *flLeg, *frLeg, *blLeg, *brLeg;
 	Sphere* body, *face, *leftEye, *rightEye, *leftNostril, *rightNostril;
+	SoundSource* pigSound;
+	bool soundOn;
 };
 

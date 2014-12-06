@@ -169,9 +169,6 @@ public:
 
 	void deployPig(vec3 pos) {
 		Pig *pig = new Pig();
-		SoundSource* pigSound = new SoundSource("pig.wav"); 
-		pigSound->setLooping(true);
-		pig->addChild(pigSound);
 		addChild(pig);
 		pig->setShader(shaderProgram);
 		pig->modelMatrix = translate(mat4(1.0f), pos);
@@ -181,7 +178,6 @@ public:
 		pig->setTextureMapped(true);
 		pig->setTexture("metal.bmp");
 		pigs.push_back(pig);
-		pigSound->play();
 	}
 
 	void setupLighting(GLuint shaderProgram) {
@@ -333,6 +329,10 @@ public:
 			Pig* pig = pigs.at(i);
 			vec3 pigFacing = playerPos - pig->getWorldPosition();
 			GLfloat pigRot = atan(pigFacing.x/(pigFacing.z))*180/M_PI;
+			if(length(pig->getWorldPosition()-playerPos) < 10.0f && !pig->soundPlaying())
+				pig->playPigSound();
+			else if (length(pig->getWorldPosition()-playerPos) >= 10.0f && pig->soundPlaying())
+				pig->pausePigSound();
 			if(pigFacing.z < 0)
 				pigRot += 180;
 			pigFacing = 0.05f*normalize(pigFacing);
