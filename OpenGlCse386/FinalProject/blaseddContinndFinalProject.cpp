@@ -152,6 +152,7 @@ public:
 		lookAtAngleXZ = 0.0;
 		for (int i = 0; i < pigs.size(); i++) {
 			Pig* temp = pigs.at(i);
+			temp->detachFromParent();
 			pigs.erase(pigs.begin()+i);
 			removeChild(temp->getSerialNumber());
 			delete temp;
@@ -163,13 +164,7 @@ public:
 		deployPig(vec3(20,0,-15));
 		deployPig(vec3(20,0,-65));
 
-		UFO* temp = ufo;
-		delete temp;
-		removeChild(ufo->getSerialNumber());
-		ufo = new UFO();
-		ufo->addController(new TiltController(&view, &moveForward, &mouse_x, &mouse_y, &playerPos));
-		//ufo->modelMatrix = translate(mat4(1.0f), vec3(0,0,0));
-
+		playerPos = vec3(0.0f, 0.0f, 12.0f);
 		ufo->update(0);
 	}
 
