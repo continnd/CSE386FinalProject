@@ -15,9 +15,9 @@ LegController::update(float elapsedTimeSec) {
 	else if(ang < -45.0f)
 		forw= !forw;
 	if(forw)
-		ang++;
+		ang += 3;
 	else
-		ang--;
+		ang -= 3;
 
 	target->modelMatrix = translate(mat4(1.0f), vec3(0.0f, 0.25f, 0.0f))*
 		rotate(mat4(1.0f), ang, vec3(1.0f, 0.0f, 0.0f))*translate(mat4(1.0f),

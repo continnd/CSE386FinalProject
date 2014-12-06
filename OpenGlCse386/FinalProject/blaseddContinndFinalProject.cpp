@@ -171,7 +171,7 @@ public:
 		Pig *pig = new Pig();
 		addChild(pig);
 		pig->setShader(shaderProgram);
-		pig->modelMatrix = translate(mat4(1.0f), pos);
+		pig->modelMatrix = translate(mat4(1.0f), pos) * translate(mat4(1.0f), vec3(0.0f, -2.0f, 0.0f));
 		pig->setAmbientAndDiffuseMat(vec4(0.f, 0.0f, 0.0f, 1.f));
 		pig->setEmissiveMat(vec4(0.f, 0.0f, .0f, 1.f));
 		pig->setSpecularMat(vec4(0.f, 0.0f, .0f, 1.f));
@@ -328,6 +328,7 @@ public:
 		for (int i = 0; i < pigs.size(); i++) {
 			Pig* pig = pigs.at(i);
 			vec3 pigFacing = playerPos - pig->getWorldPosition();
+			pigFacing = vec3(pigFacing.x, 0.0f, pigFacing.z);
 			GLfloat pigRot = atan(pigFacing.x/(pigFacing.z))*180/M_PI;
 			if(length(pig->getWorldPosition()-playerPos) < 10.0f && !pig->soundPlaying())
 				pig->playPigSound();
@@ -335,12 +336,12 @@ public:
 				pig->pausePigSound();
 			if(pigFacing.z < 0)
 				pigRot += 180;
-			pigFacing = 0.05f*normalize(pigFacing);
+			pigFacing = 0.1f*normalize(pigFacing);
 			checkWalls(&pigFacing, pig->getWorldPosition(), 1.5);
 			pig->modelMatrix = translate(mat4(1.0f), pig->getWorldPosition()) *
 				translate(mat4(1.0f), pigFacing) * rotate(mat4(1.0f), pigRot,
 				vec3(0.0f, 1.0f, 0.0f));
-			if(length(playerPos - pig->getWorldPosition()) <= 1.5f) {
+			if(length(playerPos - pig->getWorldPosition()) <= 3.0f) {
 				playerLoses = true;
 				break;
 			}
