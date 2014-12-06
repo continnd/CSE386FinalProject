@@ -52,7 +52,7 @@ public:
 	vector<Wall*>walls;
 	vector<Pig*> pigs;
 	GLuint shaderProgram;
-	blaseddContinndFinalProject() : view(0), rotationX(0.0f), rotationY(0.0f), zTrans(-12.0f)
+	blaseddContinndFinalProject() : view(1), rotationX(0.0f), rotationY(0.0f), zTrans(-12.0f)
 	{
 		playerLoses = playerWins = false;
 		moveForward = false;
@@ -128,11 +128,44 @@ public:
 		makeWalls(vec3(-25.0f, 0.0f, -40.0f), 40.0f, X);
 
 
-		deployPig(vec3(0,0,-10));
+		deployPig(vec3(0,0,-20));
 		deployPig(vec3(-30,0,-40));
 		deployPig(vec3(30,0,-85));
 		deployPig(vec3(20,0,-15));
 		deployPig(vec3(20,0,-65));
+	}
+
+	void reset() {
+		playerLoses = playerWins = false;
+		moveForward = false;
+		moveBack = false;
+		moveLeft = false;
+		moveRight = false;
+		direction = vec3(0.0f, 0.0f, -1.0f);
+		playerPos = vec3(0.0f, 0.0f, 12.0f);
+		lookAtAngleYZ = 0.0;
+		lookAtAngleXZ = 0.0;
+		for (int i = 0; i < pigs.size(); i++) {
+			Pig* temp = pigs.at(i);
+			pigs.erase(pigs.begin()+i);
+			removeChild(temp->getSerialNumber());
+			delete temp;
+			i--;
+		}
+		deployPig(vec3(0,0,-20));
+		deployPig(vec3(-30,0,-40));
+		deployPig(vec3(30,0,-85));
+		deployPig(vec3(20,0,-15));
+		deployPig(vec3(20,0,-65));
+
+		UFO* temp = ufo;
+		delete temp;
+		removeChild(ufo->getSerialNumber());
+		ufo = new UFO();
+		ufo->addController(new TiltController(&view, &moveForward, &mouse_x, &mouse_y, &playerPos));
+		//ufo->modelMatrix = translate(mat4(1.0f), vec3(0,0,0));
+		
+		ufo->update(0);
 	}
 
 	void makeWalls(vec3 startLocation, float length, int orientation) {
@@ -194,7 +227,7 @@ public:
 		generalLighting.setPositionOrDirection( GL_LIGHT_ONE,
 			vec4(1.0f, 1.0f, 1.0f, 0.0f) );
 		// ***** Positional Light ***************
-		generalLighting.setEnabled( GL_LIGHT_TWO, true );
+		generalLighting.setEnabled( GL_LIGHT_TWO, false );
 		generalLighting.setDiffuseColor( GL_LIGHT_TWO,
 			vec4(0.8f, 0.8f, 0.8f, 1.0f) );
 		generalLighting.setSpecularColor( GL_LIGHT_TWO,
@@ -221,15 +254,8 @@ public:
 	{
 		GLfloat rotationValue = 0.5f;
 		switch (Key) {
-		case '1':
-			break;
-		case '2':
-			break;
-		case '3':
-			break;
-		case '4':
-			break;
-		case '5':
+		case 'r':
+			reset();
 			break;
 		case 'w' :
 			moveForward = true;
@@ -475,11 +501,6 @@ public:
 	{
 		glm::mat4 viewMatrix;
 		switch (view) {
-		case 0:
-			viewMatrix = glm::translate(glm::mat4(1.0f),
-				glm::vec3( 0.0f, 0.0f, -12 ));
-			projectionAndViewing.setViewMatrix(viewMatrix);
-			break;
 		case 1:
 			viewMatrix = glm::lookAt(glm::vec3(playerPos.x, 20.f, playerPos.z), playerPos, glm::vec3(0,0,-1));
 			projectionAndViewing.setViewMatrix(viewMatrix);
@@ -535,7 +556,7 @@ protected:
 	{
 		GLuint menuId = glutCreateMenu(viewMenu);
 		// Specify menu items and their integer identifiers
-		glutAddMenuEntry("Default", 0);
+		//glutAddMenuEntry("Default", 0);
 		glutAddMenuEntry("View 1", 1);
 		glutAddMenuEntry("View 2", 2);
 
