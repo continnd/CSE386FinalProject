@@ -523,9 +523,15 @@ public:
 		} 
 		else if(playerWins) {
 			screenTextOutput(windowWidth/2 - 40, windowHeight/2, "YOU WIN!", vec4(0.0f, 0.0f, 0.0f, 1.0f));
-		}else
+		}else {
+			if (view==1) {
+				screenTextOutput(20,20, "Move by pressing the w key and steer with the mouse.", vec4(1,1,1,1));
+			}
+			else {
+				screenTextOutput(20,20, "Use the mouse to look around. Movement is typical WASD key setup.", vec4(1,1,1,1));
+			}
 			VisualObject::draw();
-
+		}
 	}
 
 	// Set the position, orientation and velocity of the listener 
