@@ -210,6 +210,7 @@ public:
 		pig->setSpecularMat(vec4(0.f, 0.0f, .0f, 1.f));
 		pig->setTextureMapped(true);
 		pig->setTexture("metal.bmp");
+		pig->initialize();
 		pigs.push_back(pig);
 	}
 
